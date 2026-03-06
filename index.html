@@ -451,13 +451,16 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
       <div id="configAlert" class="alert"></div>
       <button class="mbtn-pri" style="width:100%;padding:10px" onclick="saveUrl26()">Guardar y sincronizar ahora</button>
       <div class="divider"></div>
-      <div style="font-size:11px;color:#aaa;line-height:1.7">
-        <strong style="color:#555;display:block;margin-bottom:4px">Cómo publicar tu Sheet:</strong>
-        1. Abre el Google Sheet de 2026<br>
-        2. <strong>Archivo → Compartir → Publicar en la web</strong><br>
-        3. Selecciona la pestaña con los datos → formato <strong>CSV</strong> → Publicar<br>
-        4. O simplemente comparte con "Cualquier persona con el enlace puede ver"<br>
-        5. Copia la URL y pégala aquí
+      <div style="font-size:11px;color:#666;line-height:1.8;background:#f9f9f9;padding:12px 14px;border-radius:8px;border:1px solid #eee">
+        <strong style="color:#333;display:block;margin-bottom:6px">📋 Cómo obtener la URL (elige una opción):</strong>
+        <strong style="color:#1ea88b">Opción A — Más fácil:</strong><br>
+        1. Abre el Sheet → <strong>Archivo → Compartir → Compartir con otras personas</strong><br>
+        2. Cambia a "Cualquier persona con el enlace puede ver"<br>
+        3. Copia la URL del navegador y pégala arriba<br><br>
+        <strong style="color:#323cb4">Opción B — Publicar en la web:</strong><br>
+        1. <strong>Archivo → Publicar en la web</strong><br>
+        2. Selecciona la pestaña de datos → formato <strong>CSV</strong> → Publicar<br>
+        3. Copia la URL generada y pégala arriba
       </div>
     </div>
 
@@ -967,33 +970,70 @@ async function doSync(){
     setSt('spin','Sincronizando 2026…');
     try{
       const exportUrl=buildExportUrl(SHEET26_URL);
-      const r=await fetch(PROXY(exportUrl),{signal:AbortSignal.timeout(20000)});
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      const j=await r.json();
-      if(!j?.contents) throw new Error('Sin contenido');
-      const parsed=parseCSV(j.contents);
-      const ms=MONTHS.filter(m=>parsed[m]?.meganoticias?.length>0);
-      if(ms.length){
-        ms.forEach(m=>{ DB['2026'][m]=parsed[m]; });
-        save26();
-        const ts=new Date().toLocaleTimeString('es-CL');
-        setSt('ok',`2026 sincronizado — ${ms.length} meses`,ts);
-        buildMonthTabs();
-        ST.year==='compare'?renderCompare():refreshAll();
-      }
-    }catch(e){ setSt('err','Error sincronizando 2026: '+e.message); }
+      const csvText = await fetchCSV(exportUrl, null);
+      if(csvText) processCSV26(csvText, null);
+      else setSt('err','No se pudo acceder al Sheet 2026');
+    }catch(e){ setSt('err','Error 2026: '+e.message); }
   } else {
-    setSt('ok','2025 embebido · Sin URL 2026 configurada');
+    setSt('ok','2025 listo · Configura URL 2026 en ⚙ Configuración');
   }
 
   btn.disabled=false; ico.style.animation='';
 }
 
+// ── Fetch CSV: directo primero (URLs /pub), proxy como fallback ──
+async function fetchCSV(exportUrl, al){
+  const isPub = exportUrl.includes('/pub?') || exportUrl.includes('/pub&');
+
+  // URLs /pub de Google son CORS-friendly — fetch directo primero
+  if(isPub){
+    try{
+      if(al) al.textContent='⏳ Descargando CSV directamente desde Google...';
+      const r = await fetch(exportUrl, {signal: AbortSignal.timeout(25000)});
+      if(r.ok){
+        const text = await r.text();
+        if(text && text.length > 100) return text;
+      }
+    }catch(e){}
+  }
+
+  // Intentar proxy allorigins
+  try{
+    if(al) al.textContent='⏳ Conectando via proxy...';
+    const r = await fetch(PROXY(exportUrl), {signal: AbortSignal.timeout(25000)});
+    if(r.ok){
+      const j = await r.json();
+      if(j?.contents && j.contents.length > 100) return j.contents;
+    }
+  }catch(e){}
+
+  // Fallback: fetch directo (para URLs /export con sheet compartido)
+  if(!isPub){
+    try{
+      if(al) al.textContent='⏳ Intentando acceso directo...';
+      const r = await fetch(exportUrl, {signal: AbortSignal.timeout(25000)});
+      if(r.ok){
+        const text = await r.text();
+        if(text && text.length > 100) return text;
+      }
+    }catch(e){}
+  }
+
+  throw new Error('No se pudo acceder al Sheet. Verifica que la URL sea correcta y que el Sheet esté publicado en la web (Archivo → Publicar en la web → CSV).');
+}
+
 function buildExportUrl(raw){
-  const m=raw.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  const gm=raw.match(/gid=(\d+)/);
-  if(!m) throw new Error('URL inválida');
-  return `https://docs.google.com/spreadsheets/d/${m[1]}/export?format=csv${gm?'&gid='+gm[1]:''}`;
+  raw = raw.trim();
+  // Si ya es una URL de export/pub CSV directo, usarla tal cual
+  if(raw.includes('/export?') && raw.includes('format=csv')) return raw;
+  if(raw.includes('/pub?') && raw.includes('output=csv')) return raw;
+  // Extraer el ID del spreadsheet
+  const m = raw.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  if(!m) throw new Error('No se encontró un ID de Google Sheet válido en la URL');
+  const sheetId = m[1];
+  const gm = raw.match(/[#&?]gid=(\d+)/);
+  const gid = gm ? gm[1] : '0';
+  return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
 }
 
 function updateBanner26(){
@@ -1062,26 +1102,41 @@ async function saveUrl26(){
   const url=document.getElementById('url26Input').value.trim();
   const al=document.getElementById('configAlert');
   if(!url){ al.className='alert err'; al.textContent='Ingresa una URL válida.'; return; }
-  try{ buildExportUrl(url); }catch(e){ al.className='alert err'; al.textContent='URL inválida: '+e.message; return; }
+  let exportUrl;
+  try{ exportUrl=buildExportUrl(url); }
+  catch(e){ al.className='alert err'; al.textContent='URL inválida: '+e.message; return; }
   saveUrl26config(url);
-  al.className='alert inf'; al.textContent='URL guardada. Sincronizando…';
+  al.className='alert inf'; al.textContent=`⏳ Paso 1/3: Contactando proxy... (URL: ${exportUrl.slice(0,60)}...)`;
   updateBanner26();
   try{
-    const exportUrl=buildExportUrl(url);
-    const r=await fetch(PROXY(exportUrl),{signal:AbortSignal.timeout(20000)});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const j=await r.json();
-    if(!j?.contents) throw new Error('Sin contenido del proxy');
-    const parsed=parseCSV(j.contents);
-    const ms=MONTHS.filter(m=>parsed[m]?.meganoticias?.length>0);
-    if(!ms.length) throw new Error('No se encontraron datos. Verifica que el Sheet sea público y tenga el formato correcto.');
-    ms.forEach(m=>{ DB['2026'][m]=parsed[m]; });
-    save26();
-    al.className='alert ok'; al.textContent=`✓ Sheet 2026 guardado y sincronizado: ${ms.join(', ')}`;
-    setSt('ok',`2026 sincronizado — ${ms.length} meses`,new Date().toLocaleTimeString('es-CL'));
-    buildMonthTabs();
-    ST.year==='compare'?renderCompare():refreshAll();
-  }catch(e){ al.className='alert err'; al.textContent='Error al sincronizar: '+e.message; }
+    al.textContent='⏳ Conectando con Google Sheets...';
+    const csvText = await fetchCSV(exportUrl, al);
+    if(csvText) processCSV26(csvText, al);
+  }catch(e){
+    al.className='alert err';
+    al.innerHTML=`<strong>Error:</strong> ${e.message}<br><small style="color:#999">URL: ${exportUrl}</small>`;
+  }
+}
+
+function processCSV26(csvText, al){
+  // Debug: mostrar primeras líneas
+  const preview=csvText.slice(0,200).replace(/\n/g,' | ');
+  const parsed=parseCSV(csvText);
+  const ms=MONTHS.filter(m=>parsed[m]?.meganoticias?.length>0);
+  if(!ms.length){
+    al.className='alert err';
+    al.innerHTML=`<strong>No se encontraron datos.</strong><br>
+      El CSV llegó pero no coincide con el formato esperado.<br>
+      <small style="color:#999">Primeras líneas: ${preview}</small><br>
+      <small>Verifica que el Sheet tenga encabezados tipo "MEGANOTICIAS - ENERO - 2026"</small>`;
+    return;
+  }
+  ms.forEach(m=>{ DB['2026'][m]=parsed[m]; });
+  save26();
+  if(al){ al.className='alert ok'; al.textContent=`✓ Sincronizado: ${ms.join(', ')}`; }
+  setSt('ok',`2026 sincronizado — ${ms.length} meses`,new Date().toLocaleTimeString('es-CL'));
+  buildMonthTabs();
+  ST.year==='compare'?renderCompare():refreshAll();
 }
 
 // ── Import from Sheet ──
