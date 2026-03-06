@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Métricas</title>
+<title>Métricas Mega · 2025–2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -11,15 +11,15 @@
   --bc:#1ea88b;
   --bg:#f4f4f4;
   --card:#ffffff;
-  --mf:#D6D7D9;
+  --mf:#cccccc; /* GA4 gray — Marfeel uses --bc (site color) */
   --y25:#555;
-  --y26:#323cb4;
+  --y26:#000000;
   --txt:#222;
   --sub:#999;
   --border:#eeeeee;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:13px}
+body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:15px}
 
 /* ── ANIMATIONS ── */
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
@@ -27,17 +27,17 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── HEADER ── */
-.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:0 32px;position:sticky;top:0;z-index:300;box-shadow:0 1px 12px rgba(0,0,0,.05)}
-.hdr-in{max-width:1480px;margin:0 auto;display:flex;align-items:center;height:58px;gap:14px}
-.brand-dot{width:30px;height:30px;border-radius:8px;background:var(--bc);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px;flex-shrink:0;transition:background .3s}
-.hdr-title{line-height:1.2}
-.hdr-title strong{font-size:14px;font-weight:800;display:block}
-.hdr-title span{font-size:10px;color:var(--sub)}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:0 36px;position:sticky;top:0;z-index:300;box-shadow:0 2px 16px rgba(0,0,0,.07)}
+.hdr-in{max-width:1480px;margin:0 auto;display:flex;align-items:center;height:72px;gap:20px}
+.brand-dot{width:42px;height:42px;border-radius:12px;background:var(--bc);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:18px;flex-shrink:0;transition:background .3s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hdr-title{line-height:1.3}
+.hdr-title strong{font-size:17px;font-weight:800;display:block;letter-spacing:-.3px}
+.hdr-title span{font-size:11px;color:var(--sub)}
 .site-tabs{display:flex;gap:5px;margin-left:auto}
-.stab{padding:6px 16px;border-radius:24px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:500;font-size:11px;background:#f0f0f0;color:#666;transition:all .2s;white-space:nowrap}
-.stab.on{color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.stab{padding:9px 22px;border-radius:28px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:600;font-size:13px;background:#f0f0f0;color:#666;transition:all .2s;white-space:nowrap}
+.stab.on{color:#fff;font-weight:700;box-shadow:0 3px 12px rgba(0,0,0,.2)}
 .hdr-right{display:flex;gap:8px;flex-shrink:0}
-.btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-family:'Roboto',sans-serif;font-size:11px;color:#666;display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap}
+.btn{padding:9px 20px;border-radius:24px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-family:'Roboto',sans-serif;font-size:13px;font-weight:500;color:#555;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap}
 .btn:hover{border-color:#bbb;color:#333}
 .btn.solid{background:#222;color:#fff;border-color:#222;font-weight:600}
 .btn.solid:hover{background:#000}
@@ -47,42 +47,42 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
 .wrap{max-width:1480px;margin:0 auto;padding:22px 32px}
 
 /* ── TOP BAR ── */
-.topbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:10px 16px;background:var(--card);border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.04);flex-wrap:wrap}
-.year-tabs{display:flex;gap:3px;background:#f0f0f0;padding:3px;border-radius:22px}
-.ytab{padding:5px 16px;border-radius:18px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:600;font-size:12px;background:transparent;color:#666;transition:all .2s}
-.ytab.on{background:#fff;color:#222;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding:12px 20px;background:var(--card);border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,.05);flex-wrap:wrap}
+.year-tabs{display:flex;gap:4px;background:#f0f0f0;padding:4px;border-radius:28px}
+.ytab{padding:8px 22px;border-radius:22px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:600;font-size:14px;background:transparent;color:#666;transition:all .2s}
+.ytab.on{background:#fff;color:#222;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .ytab.y26.on{background:var(--y26);color:#fff}
 .ytab.cmp.on{background:linear-gradient(90deg,#333 50%,var(--y26) 50%);color:#fff}
-.status-pill{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--sub);margin-left:auto;background:#f8f8f8;padding:4px 10px;border-radius:20px;border:1px solid #eee}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sub);margin-left:auto;background:#f8f8f8;padding:6px 14px;border-radius:20px;border:1px solid #eee}
 .sdot{width:6px;height:6px;border-radius:50%;background:#ccc;flex-shrink:0}
 .sdot.ok{background:#22c55e}.sdot.err{background:#ef4444}.sdot.spin{background:#f59e0b;animation:pulse 1s infinite}
 #slast{color:#ccc;font-size:9px;margin-left:2px}
 
 /* ── MONTH ROW ── */
-.month-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px}
-.mbtn{padding:4px 12px;border-radius:16px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:400;font-size:11px;background:#e8e8e8;color:#666;transition:all .15s;position:relative}
-.mbtn.on{color:#fff;font-weight:700}
+.month-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.mbtn{padding:8px 18px;border-radius:22px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:500;font-size:13px;background:#e8e8e8;color:#555;transition:all .15s;position:relative}
+.mbtn.on{color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .mbtn-total{border:1.5px solid #ddd;}
 .mbtn .dot26{position:absolute;top:2px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--y26)}
 
 /* ── VIEW / METRIC TOGGLES ── */
 .ctrl-bar{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
-.tgrp{display:flex;background:#e8e8e8;border-radius:20px;padding:2px;gap:1px}
-.ttab{padding:4px 13px;border-radius:17px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:400;font-size:11px;background:transparent;color:#666;transition:all .15s}
+.tgrp{display:flex;background:#e8e8e8;border-radius:24px;padding:3px;gap:2px}
+.ttab{padding:8px 18px;border-radius:20px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:500;font-size:13px;background:transparent;color:#666;transition:all .15s}
 .ttab.on{color:#fff;font-weight:600}
-.best-pill{margin-left:auto;padding:3px 10px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;border-radius:20px;font-size:10px;font-weight:600}
+.best-pill{margin-left:auto;padding:5px 14px;background:#f8f8f8;border:1px solid #eee;border-radius:20px;font-size:12px;font-weight:600;display:flex;gap:10px;align-items:center}
 
 /* ── KPI GRID ── */
 .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
 @media(max-width:600px){.kpi-grid{grid-template-columns:1fr}}
 @media(max-width:680px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
-.kcard{background:var(--card);border-radius:12px;padding:18px 22px;box-shadow:0 1px 8px rgba(0,0,0,.05);border-top:3px solid #eee;transition:border-color .3s}
+.kcard{background:var(--card);border-radius:16px;padding:24px 28px;box-shadow:0 2px 16px rgba(0,0,0,.07);border-top:4px solid #eee;transition:all .3s}
 .kcard.mf{border-top-color:var(--mf)}
-.klbl{font-size:9px;color:var(--sub);font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
-.kval{font-size:22px;font-weight:900;line-height:1;margin-bottom:3px;transition:color .3s}
-.ksub{font-size:10px;color:#bbb}
+.klbl{font-size:12px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.kval{font-size:32px;font-weight:900;line-height:1;margin-bottom:2px;transition:color .3s}
+.ksub{font-size:13px;color:#bbb;margin-top:8px}
 /* YoY delta inside KPI */
-.kyoy{font-size:11px;font-weight:700;margin-top:5px;padding:2px 7px;border-radius:8px;display:inline-block}
+.kyoy{font-size:12px;font-weight:700;margin-top:5px;padding:3px 9px;border-radius:8px;display:inline-block}
 .kyoy.pos{background:#dcfce7;color:#16a34a}
 .kyoy.neg{background:#fee2e2;color:#dc2626}
 
@@ -93,19 +93,21 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
 @media(max-width:960px){.g21,.g2e{grid-template-columns:1fr}}
 
 .card{background:var(--card);border-radius:14px;padding:20px 22px;box-shadow:0 1px 8px rgba(0,0,0,.05);animation:slideUp .3s ease}
-.ctit{font-weight:700;font-size:11px;color:#444;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctit{font-weight:700;font-size:13px;color:#333;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .cwrap{position:relative}
 .cwrap.h260{height:260px}
 .cwrap.h190{height:190px}
 .cwrap.h220{height:220px}
 
 /* ── COMPARE TABLE ── */
-.tbl{width:100%;border-collapse:collapse;font-size:11px}
-.tbl th{padding:6px 8px;text-align:left;color:#aaa;font-weight:600;border-bottom:1px solid #f0f0f0;font-size:9px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-.tbl td{padding:6px 8px;border-bottom:1px solid #f8f8f8;color:#444;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{padding:8px 10px;text-align:left;color:#aaa;font-weight:600;border-bottom:1px solid #f0f0f0;font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.tbl td{padding:8px 10px;border-bottom:1px solid #f8f8f8;color:#333;white-space:nowrap;font-size:13px}
 .tbl tr:last-child td{border-bottom:none}
-.tbl tr.best td{background:#fff7ed}
-.tbl tr.best td:first-child{border-left:3px solid #fb923c;padding-left:5px}
+.tbl tr.best td{background:#dcfce7}
+.tbl tr.best td:first-child{border-left:4px solid #16a34a;padding-left:6px;font-weight:700}
+.tbl tr.worst td{background:#fee2e2}
+.tbl tr.worst td:first-child{border-left:4px solid #dc2626;padding-left:6px;font-weight:700}
 .tp{display:inline-block;padding:1px 6px;border-radius:7px;background:#dcfce7;color:#16a34a;font-weight:700;font-size:10px}
 .tn{display:inline-block;padding:1px 6px;border-radius:7px;background:#fee2e2;color:#dc2626;font-weight:700;font-size:10px}
 
@@ -162,8 +164,8 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
 .man-row .day-lbl{font-size:11px;font-weight:600;color:#666;padding-left:2px}
 .man-row input{padding:6px 8px;border:1.5px solid #eee;border-radius:7px;font-size:11px;font-family:'Roboto',sans-serif;width:100%;outline:none;transition:border .2s}
 .man-row input:focus{border-color:#bbb}
-.man-row input.ga4-inp{border-top:2px solid var(--bc)}
-.man-row input.mf-inp{border-top:2px solid var(--mf)}
+.man-row input.ga4-inp{border-top:2px solid var(--mf)}
+.man-row input.mf-inp{border-top:2px solid var(--bc)}
 .man-scroll{max-height:300px;overflow-y:auto;padding-right:4px}
 .mbtn-sec{padding:8px 18px;border-radius:20px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:11px;font-family:'Roboto',sans-serif;color:#666}
 .mbtn-pri{padding:8px 20px;border-radius:20px;border:none;background:#222;color:#fff;cursor:pointer;font-size:11px;font-family:'Roboto',sans-serif;font-weight:700}
@@ -225,36 +227,41 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
 
   <!-- KPI CARDS -->
   <div class="kpi-grid" id="kpiGrid">
+
+    <!-- CARD: Páginas Vistas -->
     <div class="kcard" id="kc0">
-      <div class="klbl">Páginas Vistas</div>
-      <div style="display:flex;gap:18px;align-items:flex-end;margin-bottom:4px">
-        <div>
-          <div style="font-size:9px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">GA4</div>
-          <div class="kval" id="kv0">—</div>
+      <div class="klbl">📄 Páginas Vistas</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:12px;overflow:hidden;border:1.5px solid #f0f0f0;margin-bottom:12px">
+        <div style="padding:14px 18px;border-right:1.5px solid #f0f0f0">
+          <div style="font-size:9px;color:var(--bc);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Marfeel</div>
+          <div class="kval" id="kv2">—</div>
         </div>
-        <div>
-          <div style="font-size:9px;color:var(--mf);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">Marfeel</div>
-          <div class="kval" id="kv2" style="color:var(--mf)">—</div>
+        <div style="padding:14px 18px;background:#fafafa">
+          <div style="font-size:9px;color:#bbb;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">GA4</div>
+          <div class="kval" id="kv0" style="color:#bbb">—</div>
         </div>
       </div>
       <div class="ksub" id="ks0"></div>
-      <div id="ky0"></div>
+      <div id="ky0" style="margin-top:6px"></div>
     </div>
+
+    <!-- CARD: Usuarios Únicos -->
     <div class="kcard" id="kc1">
-      <div class="klbl">Usuarios Únicos</div>
-      <div style="display:flex;gap:18px;align-items:flex-end;margin-bottom:4px">
-        <div>
-          <div style="font-size:9px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">GA4</div>
-          <div class="kval" id="kv1">—</div>
+      <div class="klbl">👤 Usuarios Únicos</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:12px;overflow:hidden;border:1.5px solid #f0f0f0;margin-bottom:12px">
+        <div style="padding:14px 18px;border-right:1.5px solid #f0f0f0">
+          <div style="font-size:9px;color:var(--bc);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Marfeel</div>
+          <div class="kval" id="kv3">—</div>
         </div>
-        <div>
-          <div style="font-size:9px;color:var(--mf);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">Marfeel</div>
-          <div class="kval" id="kv3" style="color:var(--mf)">—</div>
+        <div style="padding:14px 18px;background:#fafafa">
+          <div style="font-size:9px;color:#bbb;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">GA4</div>
+          <div class="kval" id="kv1" style="color:#bbb">—</div>
         </div>
       </div>
       <div class="ksub" id="ks1"></div>
-      <div id="ky1"></div>
+      <div id="ky1" style="margin-top:6px"></div>
     </div>
+
   </div>
 
   <!-- VIEW CONTROLS -->
@@ -288,7 +295,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
     <div class="g21">
       <div class="card">
         <div class="ctit">Tendencia diaria · <span id="lineTit">—</span>
-          <span style="font-size:10px;color:#bbb;font-weight:400;margin-left:auto">— GA4 &nbsp;··· Marfeel</span>
+          <span style="font-size:10px;color:#bbb;font-weight:400;margin-left:auto">— Marfeel &nbsp;··· GA4</span>
         </div>
         <div class="cwrap h190"><canvas id="lineChart"></canvas></div>
       </div>
@@ -428,10 +435,10 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
       <div id="manualFormWrap" style="display:none">
         <div class="man-head">
           <span>Día</span>
-          <span style="color:var(--bc)">PV GA4</span>
-          <span style="color:var(--bc)">UU GA4</span>
-          <span style="color:var(--mf)">PV Marfeel</span>
-          <span style="color:var(--mf)">UU Marfeel</span>
+          <span style="color:var(--mf)">PV GA4</span>
+          <span style="color:var(--mf)">UU GA4</span>
+          <span style="color:var(--bc)">PV Marfeel</span>
+          <span style="color:var(--bc)">UU Marfeel</span>
         </div>
         <div class="man-scroll" id="manRows"></div>
         <button class="mbtn-pri" style="width:100%;margin-top:12px;padding:10px" onclick="saveManual()">
@@ -485,15 +492,16 @@ const PROXIES = [
   u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
 ];
 const PROXY = PROXIES[0]; // kept for legacy usage
-let SHEET26_URL = ''; // saved in localStorage
+let SHEET26_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzFzAs9itVwbJwv8zDiWV1TVUjmQzrd5f0hsPsfyLmfwWuJqUexf6WuYxaEYw4JQ/pub?gid=293101520&single=true&output=csv'; // URL 2026 embebida
 const MONTHS   = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 const SITES    = {
   meganoticias:{label:'Meganoticias', color:'#1ea88b'},
   mega:        {label:'Mega',         color:'#323cb4'},
   megatiempo:  {label:'Megatiempo',   color:'#ffb831'}
 };
-const MF_COLOR  = '#D6D7D9';
-const Y26_COLOR = '#323cb4';
+const GA4_COLOR = '#cccccc';
+const MF_COLOR  = GA4_COLOR; // alias — Marfeel uses site color (var(--bc)) directly
+const Y26_COLOR = '#000000';
 
 // ═══════════════════════════════════════════════════════════════
 // DATA STORE — two years
@@ -567,7 +575,7 @@ const DB = {
 // ─── Persist 2026 in localStorage ───────────────────────
 function loadLocal(){
   try{ const s=localStorage.getItem('mega26'); if(s) DB['2026']=JSON.parse(s); }catch(e){}
-  try{ const u=localStorage.getItem('mega26_url'); if(u) SHEET26_URL=u; }catch(e){}
+  try{ const u=localStorage.getItem('mega26_url'); if(u) SHEET26_URL=u; }catch(e){} // localStorage override si existe
 }
 function save26(){ try{ localStorage.setItem('mega26',JSON.stringify(DB['2026'])); }catch(e){} }
 function saveUrl26config(url){ try{ localStorage.setItem('mega26_url',url); SHEET26_URL=url; }catch(e){} }
@@ -710,20 +718,22 @@ function renderKPIs(){
   const tpv=sum(d,'pv_ga4'), tuu=sum(d,'uu_ga4'), tmf=sum(d,'pv_mf'), tuu_mf=sum(d,'uu_mf');
   const dpv=pct(tpv,tmf), duu=pct(tuu,tuu_mf);
 
-  // PV card
+  // PV card — Marfeel = site color (priority), GA4 = gray
   document.getElementById('kv0').textContent=fmt(tpv);
-  document.getElementById('kv0').style.color=c;
+  document.getElementById('kv0').style.color='#aaa';
   document.getElementById('kv2').textContent=fmt(tmf);
+  document.getElementById('kv2').style.color=c;
   document.getElementById('kc0').style.borderTopColor=c;
   document.getElementById('ks0').textContent=`${ST.month==='TOTAL'?'Total año':'Prom. diario'} GA4: ${fmt(ST.month==='TOTAL'?sum(d,'pv_ga4'):avg(d,'pv_ga4'))}`;
   document.getElementById('ky0').innerHTML=`<span class="kdiff-row">
     <span class="kpct ${dpv>=0?'pos':'neg'}">Marfeel ${dpv>=0?'+':''}${dpv.toFixed(1)}% vs GA4</span>
   </span>`;
 
-  // UU card
+  // UU card — Marfeel = site color (priority), GA4 = gray
   document.getElementById('kv1').textContent=fmt(tuu);
-  document.getElementById('kv1').style.color=c;
+  document.getElementById('kv1').style.color='#aaa';
   document.getElementById('kv3').textContent=fmt(tuu_mf);
+  document.getElementById('kv3').style.color=c;
   document.getElementById('kc1').style.borderTopColor=c;
   document.getElementById('ks1').textContent=`${ST.month==='TOTAL'?'Total año':'Prom. diario'} GA4: ${fmt(ST.month==='TOTAL'?sum(d,'uu_ga4'):avg(d,'uu_ga4'))}`;
   document.getElementById('ky1').innerHTML=`<span class="kdiff-row">
@@ -739,10 +749,10 @@ function dc(k){ if(CH[k]){CH[k].destroy();delete CH[k];} }
 const chartOpts = (cb) => ({
   responsive:true, maintainAspectRatio:false,
   interaction:{mode:'index',intersect:false},
-  plugins:{legend:{labels:{color:'#888',font:{size:10,family:'Roboto'},usePointStyle:true,pointStyleWidth:7}},
+  plugins:{legend:{labels:{color:'#888',font:{size:12,family:'Roboto'},usePointStyle:false,boxWidth:28,boxHeight:3,padding:16}},
     tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtN(c.raw)}`}}},
-  scales:{x:{grid:{display:false},ticks:{color:'#bbb',font:{size:9,family:'Roboto'},maxTicksLimit:18}},
-    y:{grid:{color:'#f4f4f4'},ticks:{color:'#bbb',font:{size:9,family:'Roboto'},callback:v=>fmt(v)},border:{display:false}}}
+  scales:{x:{grid:{display:false},ticks:{color:'#bbb',font:{size:11,family:'Roboto'},maxTicksLimit:18}},
+    y:{grid:{color:'#f4f4f4'},ticks:{color:'#bbb',font:{size:11,family:'Roboto'},callback:v=>fmt(v)},border:{display:false}}}
 });
 
 function renderCharts(){
@@ -769,17 +779,18 @@ function renderCharts(){
   }
 
   const bi=mfv.reduce((mi,v,i,a)=>v>a[mi]?i:mi,0);
+  const wi=mfv.reduce((mi,v,i,a)=>v<a[mi]?i:mi,0);
   const pill=document.getElementById('bestPill');
-  pill.style.display=''; pill.textContent=`Mejor: ${labels[bi]} — ${fmt(ga4v[bi])}`;
+  pill.style.display=''; pill.innerHTML=`<span style="color:#16a34a">▲ Mejor: ${labels[bi]} — ${fmt(mfv[bi])}</span> &nbsp;·&nbsp; <span style="color:#dc2626">▼ Peor: ${labels[wi]} — ${fmt(mfv[wi])}</span>`;
 
-  const bgGA=ga4v.map((_,i)=>i===bi?color:color+'99');
-  const bgMF=mfv.map((_,i)=>i===bi?MF_COLOR:MF_COLOR+'99');
+  const bgMF=mfv.map((_,i)=>i===bi?color:i===wi?'#fca5a5':color+'88');
+  const bgGA=ga4v.map((_,i)=>i===bi?'#cccccc':i===wi?'#fca5a566':'#cccccc66');
 
   dc('main');
   CH.main=new Chart(document.getElementById('mainChart'),{type:'bar',
     data:{labels,datasets:[
-      {label:'GA4',data:ga4v,backgroundColor:bgGA,borderWidth:0,borderRadius:4,borderSkipped:false},
-      {label:'Marfeel',data:mfv,backgroundColor:bgMF,borderWidth:0,borderRadius:4,borderSkipped:false}
+      {label:'Marfeel',data:mfv,backgroundColor:bgMF,borderWidth:0,borderRadius:4,borderSkipped:false,order:1},
+      {label:'GA4',data:ga4v,backgroundColor:bgGA,borderWidth:0,borderRadius:4,borderSkipped:false,order:2}
     ]},options:chartOpts()});
 
   // ── LINE CHART ──
@@ -787,15 +798,17 @@ function renderCharts(){
   dc('line');
   CH.line=new Chart(document.getElementById('lineChart'),{type:'line',
     data:{labels:d.map(x=>x.day+''),datasets:[
-      {label:'GA4',data:d.map(x=>x[pk]),borderColor:color,borderWidth:2.5,pointRadius:0,tension:.4,fill:false},
-      {label:'Marfeel',data:d.map(x=>x[mk]),borderColor:MF_COLOR,borderWidth:1.5,pointRadius:0,tension:.4,fill:false,borderDash:[4,3]}
+      {label:'Marfeel',data:d.map(x=>x[mk]),borderColor:color,borderWidth:3,pointRadius:0,tension:.4,fill:false,order:1},
+      {label:'GA4',data:d.map(x=>x[pk]),borderColor:'#cccccc',borderWidth:1.5,pointRadius:0,tension:.4,fill:false,borderDash:[5,4],order:2}
     ]},options:chartOpts()});
 
   // ── DIFF TABLE ──
   const dbi=d.reduce((mi,x,i,a)=>x.pv_mf>a[mi].pv_mf?i:mi,0);
+  const dwi=d.reduce((mi,x,i,a)=>(x.pv_mf||Infinity)<(a[mi].pv_mf||Infinity)?i:mi,0);
   document.getElementById('diffBody').innerHTML=d.map((x,i)=>{
 
-    return `<tr${i===dbi?' class="best"':''}><td>Día ${x.day}</td><td>${fmtN(x.pv_ga4)}</td><td>${fmtN(x.pv_mf)}</td></tr>`;
+    const cls=i===dbi?'best':i===dwi?'worst':'';
+    return `<tr${cls?' class="'+cls+'"':''}><td>Día ${x.day}</td><td>${fmtN(x.pv_ga4)}</td><td>${fmtN(x.pv_mf)}</td></tr>`;
   }).join('');
 
   // ── COMP BARS (by PV Marfeel) ──
@@ -818,10 +831,12 @@ function renderCharts(){
   // ── WEEKLY TABLE ──
   const ws=weeks(d);
   const wbi=ws.reduce((mi,x,i,a)=>x.pv_mf>a[mi].pv_mf?i:mi,0);
+  const wwi=ws.reduce((mi,x,i,a)=>(x.pv_mf||Infinity)<(a[mi].pv_mf||Infinity)?i:mi,0);
   document.getElementById('weekTit').textContent=`${ST.month==='TOTAL'?'Total '+yr:ST.month+' '+yr} · ${SITES[ST.site].label}`;
   document.getElementById('weekBody').innerHTML=ws.map((w,i)=>{
 
-    return `<tr${i===wbi?' class="best"':''}><td>${w.lbl}</td><td>${w.span}</td><td>${fmtN(w.pv_ga4)}</td><td>${fmtN(w.uu_ga4)}</td><td>${fmtN(w.pv_mf)}</td><td>${fmtN(w.uu_mf)}</td></tr>`;
+    const wcls=i===wbi?'best':i===wwi?'worst':'';
+    return `<tr${wcls?' class="'+wcls+'"':''}><td>${w.lbl}</td><td>${w.span}</td><td>${fmtN(w.pv_ga4)}</td><td>${fmtN(w.uu_ga4)}</td><td>${fmtN(w.pv_mf)}</td><td>${fmtN(w.uu_mf)}</td></tr>`;
   }).join('');
 }
 
@@ -885,24 +900,25 @@ function renderCompare(){
   }).join('');
 
   // ── CHART 1: líneas del sitio seleccionado (ambos años, GA4 + Marfeel) ──
-  const mk1=cmpMetric; const mk2=cmpMetric==='pv_ga4'?'pv_mf':cmpMetric==='uu_ga4'?'uu_mf':null;
+  // Chart 1: evolution of selected site — Marfeel primary (site color), GA4 secondary (gray)
+  const mfKey = cmpMetric==='pv_ga4'?'pv_mf':cmpMetric==='uu_ga4'?'uu_mf':cmpMetric==='pv_mf'?'pv_mf':'uu_mf';
+  const ga4Key= cmpMetric==='pv_mf'?'pv_ga4':cmpMetric==='uu_mf'?'uu_ga4':cmpMetric==='pv_ga4'?'pv_ga4':'uu_ga4';
   const datasets1=[
-    {label:`2025 GA4`,data:data25[ST.site].map(d=>d[cmpMetric]),borderColor:siteColor,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false},
-    {label:`2026 GA4`,data:data26[ST.site].map(d=>d[cmpMetric]),borderColor:siteColor,borderWidth:2,borderDash:[5,3],pointRadius:3,tension:.4,fill:false,pointStyle:'triangle'},
+    {label:'Marfeel 2025',data:data25[ST.site].map(d=>d[mfKey]),borderColor:siteColor,borderWidth:3,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false,order:1},
+    {label:'Marfeel 2026',data:data26[ST.site].map(d=>d[mfKey]),borderColor:siteColor,borderWidth:2,borderDash:[6,3],pointRadius:3,tension:.4,fill:false,order:2},
+    {label:'GA4 2025',data:data25[ST.site].map(d=>d[ga4Key]),borderColor:'#cccccc',borderWidth:1.5,pointRadius:2,tension:.4,fill:false,order:3},
+    {label:'GA4 2026',data:data26[ST.site].map(d=>d[ga4Key]),borderColor:'#cccccc',borderWidth:1.5,borderDash:[4,3],pointRadius:2,tension:.4,fill:false,order:4},
   ];
-  if(mk2){
-    datasets1.push({label:`2025 Marfeel`,data:data25[ST.site].map(d=>d[mk2]),borderColor:MF_COLOR,borderWidth:1.5,pointRadius:2,tension:.4,fill:false});
-    datasets1.push({label:`2026 Marfeel`,data:data26[ST.site].map(d=>d[mk2]),borderColor:MF_COLOR,borderWidth:1.5,borderDash:[4,3],pointRadius:2,tension:.4,fill:false});
-  }
   dc('c1');
   CH.c1=new Chart(document.getElementById('cmpChart1'),{type:'line',data:{labels,datasets:datasets1},options:cmpChartOpts()});
 
-  // ── CHART 2: los 3 sitios, 2025 sólido vs 2026 punteado ──
+  // Chart 2: all 3 sites — Marfeel only, 2025 solid vs 2026 dashed
+  const cmpMfKey=cmpMetric==='pv_ga4'?'pv_mf':cmpMetric==='uu_ga4'?'uu_mf':cmpMetric;
   const datasets2=Object.entries(SITES).flatMap(([id,s])=>[
-    {label:`${s.label} 2025`,data:data25[id].map(d=>d[cmpMetric]),borderColor:s.color,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false},
-    {label:`${s.label} 2026`,data:data26[id].map(d=>d[cmpMetric]),borderColor:s.color,borderWidth:1.5,borderDash:[5,3],pointRadius:2,tension:.4,fill:false,pointStyle:'triangle'}
+    {label:`${s.label} 2025`,data:data25[id].map(d=>d[cmpMfKey]),borderColor:s.color,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false,order:1},
+    {label:`${s.label} 2026`,data:data26[id].map(d=>d[cmpMfKey]),borderColor:s.color,borderWidth:1.5,borderDash:[6,3],pointRadius:2,tension:.4,fill:false,order:2}
   ]);
-  dc('c2');
+    dc('c2');
   CH.c2=new Chart(document.getElementById('cmpChart2'),{type:'line',data:{labels,datasets:datasets2},options:cmpChartOpts()});
 
   // ── TABLA DETALLADA ──
@@ -953,7 +969,7 @@ function cmpChartOpts(){
     responsive:true, maintainAspectRatio:false,
     interaction:{mode:'index',intersect:false},
     plugins:{
-      legend:{labels:{color:'#888',font:{size:10,family:'Roboto'},usePointStyle:true,pointStyleWidth:7,boxHeight:2}},
+      legend:{labels:{color:'#888',font:{size:12,family:'Roboto'},usePointStyle:false,boxWidth:28,boxHeight:3,padding:16}},
       tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtN(c.raw)}`}}
     },
     scales:{
