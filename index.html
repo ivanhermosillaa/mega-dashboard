@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Métricas Mega · 2025–2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bc:#1ea88b;
+  --bg:#f4f4f4;
+  --card:#ffffff;
+  --mf:#D6D7D9;
+  --y25:#555;
+  --y26:#323cb4;
+  --txt:#222;
+  --sub:#999;
+  --border:#eeeeee;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:13px}
+
+/* ── ANIMATIONS ── */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HEADER ── */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:0 32px;position:sticky;top:0;z-index:300;box-shadow:0 1px 12px rgba(0,0,0,.05)}
+.hdr-in{max-width:1480px;margin:0 auto;display:flex;align-items:center;height:58px;gap:14px}
+.brand-dot{width:30px;height:30px;border-radius:8px;background:var(--bc);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px;flex-shrink:0;transition:background .3s}
+.hdr-title{line-height:1.2}
+.hdr-title strong{font-size:14px;font-weight:800;display:block}
+.hdr-title span{font-size:10px;color:var(--sub)}
+.site-tabs{display:flex;gap:5px;margin-left:auto}
+.stab{padding:6px 16px;border-radius:24px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:500;font-size:11px;background:#f0f0f0;color:#666;transition:all .2s;white-space:nowrap}
+.stab.on{color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hdr-right{display:flex;gap:8px;flex-shrink:0}
+.btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-family:'Roboto',sans-serif;font-size:11px;color:#666;display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap}
+.btn:hover{border-color:#bbb;color:#333}
+.btn.solid{background:#222;color:#fff;border-color:#222;font-weight:600}
+.btn.solid:hover{background:#000}
+.btn:disabled{opacity:.5;pointer-events:none}
+
+/* ── MAIN WRAP ── */
+.wrap{max-width:1480px;margin:0 auto;padding:22px 32px}
+
+/* ── TOP BAR ── */
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:10px 16px;background:var(--card);border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.04);flex-wrap:wrap}
+.year-tabs{display:flex;gap:3px;background:#f0f0f0;padding:3px;border-radius:22px}
+.ytab{padding:5px 16px;border-radius:18px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:600;font-size:12px;background:transparent;color:#666;transition:all .2s}
+.ytab.on{background:#fff;color:#222;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.ytab.y26.on{background:var(--y26);color:#fff}
+.ytab.cmp.on{background:linear-gradient(90deg,#333 50%,var(--y26) 50%);color:#fff}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--sub);margin-left:auto;background:#f8f8f8;padding:4px 10px;border-radius:20px;border:1px solid #eee}
+.sdot{width:6px;height:6px;border-radius:50%;background:#ccc;flex-shrink:0}
+.sdot.ok{background:#22c55e}.sdot.err{background:#ef4444}.sdot.spin{background:#f59e0b;animation:pulse 1s infinite}
+#slast{color:#ccc;font-size:9px;margin-left:2px}
+
+/* ── MONTH ROW ── */
+.month-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px}
+.mbtn{padding:4px 12px;border-radius:16px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:400;font-size:11px;background:#e8e8e8;color:#666;transition:all .15s;position:relative}
+.mbtn.on{color:#fff;font-weight:700}
+.mbtn-total{border:1.5px solid #ddd;}
+.mbtn .dot26{position:absolute;top:2px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--y26)}
+
+/* ── VIEW / METRIC TOGGLES ── */
+.ctrl-bar{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.tgrp{display:flex;background:#e8e8e8;border-radius:20px;padding:2px;gap:1px}
+.ttab{padding:4px 13px;border-radius:17px;border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-weight:400;font-size:11px;background:transparent;color:#666;transition:all .15s}
+.ttab.on{color:#fff;font-weight:600}
+.best-pill{margin-left:auto;padding:3px 10px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;border-radius:20px;font-size:10px;font-weight:600}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:600px){.kpi-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kcard{background:var(--card);border-radius:12px;padding:18px 22px;box-shadow:0 1px 8px rgba(0,0,0,.05);border-top:3px solid #eee;transition:border-color .3s}
+.kcard.mf{border-top-color:var(--mf)}
+.klbl{font-size:9px;color:var(--sub);font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.kval{font-size:22px;font-weight:900;line-height:1;margin-bottom:3px;transition:color .3s}
+.ksub{font-size:10px;color:#bbb}
+/* YoY delta inside KPI */
+.kyoy{font-size:11px;font-weight:700;margin-top:5px;padding:2px 7px;border-radius:8px;display:inline-block}
+.kyoy.pos{background:#dcfce7;color:#16a34a}
+.kyoy.neg{background:#fee2e2;color:#dc2626}
+
+/* ── LAYOUT GRIDS ── */
+.g21{display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:16px}
+.g11{margin-bottom:16px}
+.g2e{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:960px){.g21,.g2e{grid-template-columns:1fr}}
+
+.card{background:var(--card);border-radius:14px;padding:20px 22px;box-shadow:0 1px 8px rgba(0,0,0,.05);animation:slideUp .3s ease}
+.ctit{font-weight:700;font-size:11px;color:#444;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cwrap{position:relative}
+.cwrap.h260{height:260px}
+.cwrap.h190{height:190px}
+.cwrap.h220{height:220px}
+
+/* ── COMPARE TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{padding:6px 8px;text-align:left;color:#aaa;font-weight:600;border-bottom:1px solid #f0f0f0;font-size:9px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.tbl td{padding:6px 8px;border-bottom:1px solid #f8f8f8;color:#444;white-space:nowrap}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr.best td{background:#fff7ed}
+.tbl tr.best td:first-child{border-left:3px solid #fb923c;padding-left:5px}
+.tp{display:inline-block;padding:1px 6px;border-radius:7px;background:#dcfce7;color:#16a34a;font-weight:700;font-size:10px}
+.tn{display:inline-block;padding:1px 6px;border-radius:7px;background:#fee2e2;color:#dc2626;font-weight:700;font-size:10px}
+
+/* ── COMP BARS ── */
+.cbr-item{margin-bottom:11px}
+.cbr-hdr{display:flex;justify-content:space-between;margin-bottom:3px}
+.cbr-name{font-size:12px;font-weight:700}
+.cbr-val{font-size:12px;font-weight:700}
+.cbr-bg{height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-bottom:2px}
+.cbr-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.cbr-sub{display:flex;justify-content:space-between;font-size:10px;color:#bbb}
+.hr-light{border:none;border-top:1px solid #f0f0f0;margin:10px 0}
+
+/* ── YoY COMPARE TABLE ── */
+.yoy-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.yoy-tbl th{padding:7px 8px;text-align:left;color:#aaa;font-weight:600;border-bottom:2px solid #f0f0f0;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
+.yoy-tbl td{padding:7px 8px;border-bottom:1px solid #f8f8f8}
+.yoy-tbl tr:last-child td{border-bottom:none}
+.yoy-tbl tr.no26 td{opacity:.4}
+.y25-val{color:#555;font-weight:600}
+.y26-val{color:var(--y26);font-weight:600}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:flex-start;justify-content:center;padding-top:40px;overflow-y:auto}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:18px;padding:0;width:620px;max-width:95vw;box-shadow:0 24px 64px rgba(0,0,0,.2);overflow:hidden;margin-bottom:40px}
+.modal-head{padding:22px 28px 0;border-bottom:1px solid #f0f0f0;padding-bottom:0}
+.modal-head h2{font-size:16px;font-weight:800;margin-bottom:3px}
+.modal-head p{font-size:11px;color:var(--sub);margin-bottom:16px}
+.modal-tabs{display:flex;gap:0;border-bottom:2px solid #f0f0f0}
+.mtab{padding:10px 20px;border:none;background:transparent;cursor:pointer;font-family:'Roboto',sans-serif;font-size:12px;font-weight:500;color:#aaa;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.mtab.on{color:#222;font-weight:700;border-bottom-color:#222}
+.modal-body{padding:22px 28px}
+.modal-footer{padding:14px 28px 20px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid #f0f0f0}
+
+/* Modal form elements */
+.frow{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.fld{flex:1;min-width:110px}
+.fld label{display:block;font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.fld select,.fld input{width:100%;padding:8px 10px;border:1.5px solid #eee;border-radius:8px;font-family:'Roboto',sans-serif;font-size:12px;color:#333;outline:none;transition:border .2s;background:#fff}
+.fld select:focus,.fld input:focus{border-color:#bbb}
+.url-wrap{position:relative;margin-bottom:12px}
+.url-wrap input{width:100%;padding:9px 12px;border:1.5px solid #eee;border-radius:8px;font-size:12px;font-family:'Roboto',sans-serif;outline:none;transition:border .2s}
+.url-wrap input:focus{border-color:#bbb}
+.alert{padding:10px 14px;border-radius:8px;font-size:11px;margin-bottom:12px;display:none}
+.alert.ok{background:#dcfce7;color:#15803d;display:block}
+.alert.err{background:#fee2e2;color:#dc2626;display:block}
+.alert.inf{background:#eff6ff;color:#1d4ed8;display:block}
+.divider{border:none;border-top:1px solid #f0f0f0;margin:16px 0}
+/* Manual grid */
+.man-head{display:grid;grid-template-columns:52px 1fr 1fr 1fr 1fr;gap:6px;margin-bottom:6px;padding:0 2px}
+.man-head span{font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase}
+.man-row{display:grid;grid-template-columns:52px 1fr 1fr 1fr 1fr;gap:6px;margin-bottom:5px;align-items:center}
+.man-row .day-lbl{font-size:11px;font-weight:600;color:#666;padding-left:2px}
+.man-row input{padding:6px 8px;border:1.5px solid #eee;border-radius:7px;font-size:11px;font-family:'Roboto',sans-serif;width:100%;outline:none;transition:border .2s}
+.man-row input:focus{border-color:#bbb}
+.man-row input.ga4-inp{border-top:2px solid var(--bc)}
+.man-row input.mf-inp{border-top:2px solid var(--mf)}
+.man-scroll{max-height:300px;overflow-y:auto;padding-right:4px}
+.mbtn-sec{padding:8px 18px;border-radius:20px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:11px;font-family:'Roboto',sans-serif;color:#666}
+.mbtn-pri{padding:8px 20px;border-radius:20px;border:none;background:#222;color:#fff;cursor:pointer;font-size:11px;font-family:'Roboto',sans-serif;font-weight:700}
+.mbtn-pri:hover{background:#000}
+
+/* ── FOOTER ── */
+.footer{display:flex;justify-content:space-between;padding:14px 0 4px;border-top:1px solid #eee;margin-top:4px}
+.footer p{font-size:10px;color:#ccc}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:2px dashed #ddd;border-radius:10px;padding:20px;text-align:center;color:#aaa;font-size:12px;cursor:pointer;transition:all .2s;margin-bottom:12px}
+.upload-zone:hover{border-color:#bbb;color:#666;background:#fafafa}
+.upload-zone input{display:none}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="brand-dot" id="brandDot">M</div>
+    <div class="hdr-title"><strong>Dashboard Métricas</strong><span id="hdrSub">Mega · 2025–2026</span></div>
+    <div class="site-tabs" id="siteTabs"></div>
+    <div class="hdr-right">
+      <button class="btn" onclick="openModal()">↑ Cargar datos</button>
+      <button class="btn solid" id="syncBtn" onclick="doSync()">
+        <span id="syncIco">↻</span> Actualizar
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ MAIN ═══ -->
+<main class="wrap">
+
+  <!-- TOP BAR: years + status -->
+  <div class="topbar">
+    <div class="year-tabs">
+      <button class="ytab y25 on" id="ytab25" onclick="setYear('2025')">2025</button>
+      <button class="ytab y26"    id="ytab26" onclick="setYear('2026')">2026</button>
+      <button class="ytab cmp"   id="ytabCmp" onclick="setYear('compare')">Comparar años</button>
+    </div>
+    <div class="status-pill">
+      <div class="sdot" id="sdot"></div>
+      <span id="smsg">—</span>
+      <span id="slast"></span>
+    </div>
+  </div>
+
+  <!-- 2026 SYNC BANNER -->
+  <div id="banner26" style="display:none;margin-bottom:12px;padding:10px 16px;background:#eff6ff;border-radius:10px;border:1px solid #bfdbfe;font-size:11px;color:#1d4ed8;display:flex;align-items:center;gap:10px">
+    <span>🔗</span>
+    <span id="banner26Txt">Sheet 2026 configurado</span>
+    <button onclick="openModal();showMTab('config')" style="margin-left:auto;padding:4px 12px;border-radius:14px;border:1.5px solid #93c5fd;background:#fff;color:#1d4ed8;font-size:10px;font-weight:700;cursor:pointer;font-family:Roboto,sans-serif">Cambiar URL</button>
+  </div>
+
+  <!-- MONTH TABS -->
+  <div class="month-row" id="monthRow"></div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kcard" id="kc0">
+      <div class="klbl">Páginas Vistas</div>
+      <div style="display:flex;gap:18px;align-items:flex-end;margin-bottom:4px">
+        <div>
+          <div style="font-size:9px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">GA4</div>
+          <div class="kval" id="kv0">—</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--mf);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">Marfeel</div>
+          <div class="kval" id="kv2" style="color:var(--mf)">—</div>
+        </div>
+      </div>
+      <div class="ksub" id="ks0"></div>
+      <div id="ky0"></div>
+    </div>
+    <div class="kcard" id="kc1">
+      <div class="klbl">Usuarios Únicos</div>
+      <div style="display:flex;gap:18px;align-items:flex-end;margin-bottom:4px">
+        <div>
+          <div style="font-size:9px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">GA4</div>
+          <div class="kval" id="kv1">—</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--mf);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">Marfeel</div>
+          <div class="kval" id="kv3" style="color:var(--mf)">—</div>
+        </div>
+      </div>
+      <div class="ksub" id="ks1"></div>
+      <div id="ky1"></div>
+    </div>
+  </div>
+
+  <!-- VIEW CONTROLS -->
+  <div class="ctrl-bar" id="ctrlBar">
+    <div class="tgrp" id="viewTG">
+      <button class="ttab on" data-v="monthly">Mensual</button>
+      <button class="ttab" data-v="weekly">Semanal</button>
+      <button class="ttab" data-v="daily">Diario</button>
+    </div>
+    <div class="tgrp" id="metricTG">
+      <button class="ttab on" data-m="pv">Págs. Vistas</button>
+      <button class="ttab" data-m="uu">Usuarios Únicos</button>
+    </div>
+    <span class="best-pill" id="bestPill" style="display:none"></span>
+  </div>
+
+  <!-- ══ NORMAL VIEW ══ -->
+  <div id="normalView">
+    <!-- Row 1: main chart + comp bars -->
+    <div class="g21">
+      <div class="card">
+        <div class="ctit"><span id="mainTit">—</span></div>
+        <div class="cwrap h260"><canvas id="mainChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ctit">Comparativa sitios · <span id="compLbl">—</span></div>
+        <div id="compBars" style="overflow-y:auto;max-height:280px"></div>
+      </div>
+    </div>
+    <!-- Row 2: line + diff table -->
+    <div class="g21">
+      <div class="card">
+        <div class="ctit">Tendencia diaria · <span id="lineTit">—</span>
+          <span style="font-size:10px;color:#bbb;font-weight:400;margin-left:auto">— GA4 &nbsp;··· Marfeel</span>
+        </div>
+        <div class="cwrap h190"><canvas id="lineChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ctit">PV diario · GA4 vs Marfeel</div>
+        <div style="overflow-y:auto;max-height:215px">
+          <table class="tbl"><thead><tr><th>Día</th><th>PV GA4</th><th>PV Marfeel</th></tr></thead><tbody id="diffBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+    <!-- Row 3: weekly table -->
+    <div class="card g11">
+      <div class="ctit">Resumen Semanal · <span id="weekTit">—</span></div>
+      <div style="overflow-x:auto">
+        <table class="tbl"><thead><tr><th>Semana</th><th>Días</th><th>PV GA4</th><th>UU GA4</th><th>PV Marfeel</th><th>UU Marfeel</th></tr></thead><tbody id="weekBody"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COMPARE VIEW ══ -->
+  <div id="compareView" style="display:none">
+
+    <!-- KPI resumen anual -->
+    <div id="cmpKpiRow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px"></div>
+
+    <!-- Selector métrica comparativa -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <span style="font-size:11px;color:#888;font-weight:600">Métrica:</span>
+      <div class="tgrp" id="cmpMetricTG">
+        <button class="ttab on" data-cm="pv_ga4">PV GA4</button>
+        <button class="ttab" data-cm="pv_mf">PV Marfeel</button>
+        <button class="ttab" data-cm="uu_ga4">UU GA4</button>
+        <button class="ttab" data-cm="uu_mf">UU Marfeel</button>
+      </div>
+      <span style="font-size:11px;color:#aaa;margin-left:8px">— 2025 &nbsp;·· 2026</span>
+    </div>
+
+    <!-- Gráfico líneas: todos los sitios -->
+    <div class="g2e" style="margin-bottom:14px">
+      <div class="card">
+        <div class="ctit">Evolución mensual · <span id="cmpSiteLbl">—</span></div>
+        <div class="cwrap h240"><canvas id="cmpChart1"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ctit">Los 3 sitios · 2025 vs 2026 · <span id="cmpMetricLbl">PV GA4</span></div>
+        <div class="cwrap h240"><canvas id="cmpChart2"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Tabla detallada mes a mes -->
+    <div class="card g11">
+      <div class="ctit" style="justify-content:space-between">
+        <span>Detalle mensual · <span id="cmpSiteLbl2">—</span></span>
+        <div class="tgrp" id="cmpTblMetricTG" style="font-size:10px">
+          <button class="ttab on" data-ctm="pv">Págs. Vistas</button>
+          <button class="ttab" data-ctm="uu">Usuarios</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="yoy-tbl" id="yoyTable">
+          <thead id="yoyHead"></thead>
+          <tbody id="yoyBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer"><p>Fuente: Google Sheets · Auto-sync cada 5 min</p><p id="footerTs"></p></div>
+</main>
+
+<!-- ═══ MODAL ═══ -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Gestión de datos</h2>
+      <p>Carga desde Google Sheets o ingresa datos manualmente por mes y año.</p>
+      <div class="modal-tabs">
+        <button class="mtab on" onclick="showMTab('sync')">↓ Importar Sheet</button>
+        <button class="mtab" onclick="showMTab('manual')">✏ Ingreso manual</button>
+        <button class="mtab" onclick="showMTab('config')">⚙ Configuración</button>
+      </div>
+    </div>
+
+    <!-- TAB: SYNC -->
+    <div class="modal-body" id="mtSync">
+      <div class="frow">
+        <div class="fld" style="flex:0 0 90px">
+          <label>Año</label>
+          <select id="loadYear"><option>2025</option><option>2026</option></select>
+        </div>
+        <div class="fld">
+          <label>URL Google Sheet (público)</label>
+          <div class="url-wrap"><input type="text" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/..."/></div>
+        </div>
+      </div>
+      <div id="syncAlert" class="alert"></div>
+      <button class="mbtn-pri" style="width:100%;padding:10px" onclick="loadFromSheet()">
+        Importar desde Google Sheets
+      </button>
+      <p style="text-align:center;font-size:10px;color:#bbb;margin-top:8px">
+        El Sheet debe estar compartido como "Cualquier persona con el enlace puede ver"
+      </p>
+      <div class="divider"></div>
+      <!-- Upload CSV file -->
+      <div style="font-size:12px;font-weight:700;color:#333;margin-bottom:8px">O sube un archivo CSV exportado</div>
+      <label class="upload-zone" id="csvDropZone">
+        <input type="file" accept=".csv,.xlsx" id="csvFile" onchange="handleFileUpload(event)"/>
+        <div>📄 Arrastra aquí o haz clic para subir un CSV / Excel</div>
+        <div style="font-size:10px;margin-top:4px">CSV exportado desde Google Sheets</div>
+      </label>
+    </div>
+
+    <!-- TAB: MANUAL -->
+    <div class="modal-body" id="mtManual" style="display:none">
+      <div class="frow">
+        <div class="fld">
+          <label>Año</label>
+          <select id="manYear"><option>2025</option><option>2026</option></select>
+        </div>
+        <div class="fld">
+          <label>Mes</label>
+          <select id="manMonth"></select>
+        </div>
+        <div class="fld">
+          <label>Sitio</label>
+          <select id="manSite">
+            <option value="meganoticias">Meganoticias</option>
+            <option value="mega">Mega</option>
+            <option value="megatiempo">Megatiempo</option>
+          </select>
+        </div>
+        <div class="fld" style="flex:0 0 80px;display:flex;align-items:flex-end">
+          <button class="mbtn-pri" style="width:100%;padding:8px 0;font-size:11px" onclick="buildManualForm()">Cargar</button>
+        </div>
+      </div>
+      <div id="manualAlert" class="alert"></div>
+      <div id="manualFormWrap" style="display:none">
+        <div class="man-head">
+          <span>Día</span>
+          <span style="color:var(--bc)">PV GA4</span>
+          <span style="color:var(--bc)">UU GA4</span>
+          <span style="color:var(--mf)">PV Marfeel</span>
+          <span style="color:var(--mf)">UU Marfeel</span>
+        </div>
+        <div class="man-scroll" id="manRows"></div>
+        <button class="mbtn-pri" style="width:100%;margin-top:12px;padding:10px" onclick="saveManual()">
+          Guardar datos del mes
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB: CONFIG -->
+    <div class="modal-body" id="mtConfig" style="display:none">
+      <div style="font-size:13px;font-weight:700;color:#222;margin-bottom:4px">Fuente de datos 2026</div>
+      <p style="font-size:11px;color:#aaa;margin-bottom:14px">Pega la URL de tu Google Sheet de 2026. Se guardará y el dashboard la usará para sincronizar automáticamente cada vez que abras el dashboard o presiones "Actualizar".</p>
+      <div class="fld" style="margin-bottom:14px">
+        <label>URL Google Sheet 2026</label>
+        <input type="text" id="url26Input" style="width:100%;padding:9px 12px;border:1.5px solid #eee;border-radius:8px;font-size:12px;font-family:Roboto,sans-serif;outline:none" placeholder="https://docs.google.com/spreadsheets/d/..."/>
+      </div>
+      <div id="configAlert" class="alert"></div>
+      <button class="mbtn-pri" style="width:100%;padding:10px" onclick="saveUrl26()">Guardar y sincronizar ahora</button>
+      <div class="divider"></div>
+      <div style="font-size:11px;color:#aaa;line-height:1.7">
+        <strong style="color:#555;display:block;margin-bottom:4px">Cómo publicar tu Sheet:</strong>
+        1. Abre el Google Sheet de 2026<br>
+        2. <strong>Archivo → Compartir → Publicar en la web</strong><br>
+        3. Selecciona la pestaña con los datos → formato <strong>CSV</strong> → Publicar<br>
+        4. O simplemente comparte con "Cualquier persona con el enlace puede ver"<br>
+        5. Copia la URL y pégala aquí
+      </div>
+    </div>
+
+        <div class="modal-footer">
+      <button class="mbtn-sec" onclick="closeModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════════
+const SHEET_ID = '14_epYTLA1brDkxGrFKZ5AasZ1drLdDqA';
+const GID      = '151559138';
+const PROXY    = u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}`;
+let SHEET26_URL = ''; // saved in localStorage
+const MONTHS   = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+const SITES    = {
+  meganoticias:{label:'Meganoticias', color:'#1ea88b'},
+  mega:        {label:'Mega',         color:'#323cb4'},
+  megatiempo:  {label:'Megatiempo',   color:'#ffb831'}
+};
+const MF_COLOR  = '#D6D7D9';
+const Y26_COLOR = '#323cb4';
+
+// ═══════════════════════════════════════════════════════════════
+// DATA STORE — two years
+// ═══════════════════════════════════════════════════════════════
+const DB = {
+  '2025': {
+    ENERO:{
+      meganoticias:[{day:1,pv_ga4:774480,uu_ga4:357523,pv_mf:871328,uu_mf:407229},{day:2,pv_ga4:1030160,uu_ga4:474236,pv_mf:1191214,uu_mf:537520},{day:3,pv_ga4:794528,uu_ga4:366208,pv_mf:931419,uu_mf:415148},{day:4,pv_ga4:637926,uu_ga4:297142,pv_mf:732124,uu_mf:332917},{day:5,pv_ga4:724996,uu_ga4:327426,pv_mf:835593,uu_mf:367999},{day:6,pv_ga4:756251,uu_ga4:351867,pv_mf:880567,uu_mf:400665},{day:7,pv_ga4:870805,uu_ga4:366337,pv_mf:1038419,uu_mf:424862},{day:8,pv_ga4:822712,uu_ga4:360803,pv_mf:971267,uu_mf:421236},{day:9,pv_ga4:811427,uu_ga4:370957,pv_mf:938952,uu_mf:428610},{day:10,pv_ga4:815025,uu_ga4:380184,pv_mf:932750,uu_mf:434606},{day:11,pv_ga4:603533,uu_ga4:289091,pv_mf:686344,uu_mf:320178},{day:12,pv_ga4:627474,uu_ga4:306047,pv_mf:704897,uu_mf:340028},{day:13,pv_ga4:972505,uu_ga4:435459,pv_mf:1135272,uu_mf:493409},{day:14,pv_ga4:941208,uu_ga4:429675,pv_mf:1105385,uu_mf:488650},{day:15,pv_ga4:728851,uu_ga4:329381,pv_mf:848966,uu_mf:381668},{day:16,pv_ga4:660552,uu_ga4:286760,pv_mf:775733,uu_mf:329869},{day:17,pv_ga4:621709,uu_ga4:275168,pv_mf:731464,uu_mf:328996},{day:18,pv_ga4:693721,uu_ga4:309907,pv_mf:827873,uu_mf:363083},{day:19,pv_ga4:611417,uu_ga4:271990,pv_mf:722809,uu_mf:323615},{day:20,pv_ga4:672126,uu_ga4:284461,pv_mf:810515,uu_mf:343310},{day:21,pv_ga4:674347,uu_ga4:293166,pv_mf:802028,uu_mf:346368},{day:22,pv_ga4:617914,uu_ga4:283577,pv_mf:735000,uu_mf:337268},{day:23,pv_ga4:612593,uu_ga4:301541,pv_mf:712788,uu_mf:343691},{day:24,pv_ga4:604856,uu_ga4:294098,pv_mf:712475,uu_mf:344365},{day:25,pv_ga4:633823,uu_ga4:301872,pv_mf:750957,uu_mf:349578},{day:26,pv_ga4:661886,uu_ga4:310831,pv_mf:777563,uu_mf:355444},{day:27,pv_ga4:794480,uu_ga4:331715,pv_mf:958496,uu_mf:390235},{day:28,pv_ga4:696206,uu_ga4:306161,pv_mf:827602,uu_mf:368481},{day:29,pv_ga4:643021,uu_ga4:292238,pv_mf:756936,uu_mf:342748},{day:30,pv_ga4:702004,uu_ga4:326837,pv_mf:828476,uu_mf:384181},{day:31,pv_ga4:711446,uu_ga4:349646,pv_mf:827602,uu_mf:410400}],
+      mega:[{day:1,pv_ga4:395537,uu_ga4:191827,pv_mf:456839,uu_mf:204201},{day:2,pv_ga4:523274,uu_ga4:223582,pv_mf:588391,uu_mf:232302},{day:3,pv_ga4:451011,uu_ga4:190284,pv_mf:506424,uu_mf:198470},{day:4,pv_ga4:348438,uu_ga4:180631,pv_mf:403619,uu_mf:187444},{day:5,pv_ga4:311725,uu_ga4:150270,pv_mf:348389,uu_mf:157184},{day:6,pv_ga4:472086,uu_ga4:192753,pv_mf:525838,uu_mf:200580},{day:7,pv_ga4:503425,uu_ga4:196347,pv_mf:569567,uu_mf:202970},{day:8,pv_ga4:474705,uu_ga4:185646,pv_mf:533674,uu_mf:193080},{day:9,pv_ga4:494777,uu_ga4:201685,pv_mf:552538,uu_mf:207188},{day:10,pv_ga4:532322,uu_ga4:231415,pv_mf:595501,uu_mf:237795},{day:11,pv_ga4:317408,uu_ga4:152352,pv_mf:351272,uu_mf:156868},{day:12,pv_ga4:383246,uu_ga4:205971,pv_mf:420325,uu_mf:208406},{day:13,pv_ga4:570797,uu_ga4:247518,pv_mf:632277,uu_mf:252930},{day:14,pv_ga4:653221,uu_ga4:254370,pv_mf:732585,uu_mf:261933},{day:15,pv_ga4:649727,uu_ga4:251212,pv_mf:731505,uu_mf:261485},{day:16,pv_ga4:568774,uu_ga4:224893,pv_mf:644087,uu_mf:235899},{day:17,pv_ga4:511090,uu_ga4:212944,pv_mf:575382,uu_mf:217580},{day:18,pv_ga4:403706,uu_ga4:207189,pv_mf:464732,uu_mf:211188},{day:19,pv_ga4:359591,uu_ga4:177904,pv_mf:402043,uu_mf:183418},{day:20,pv_ga4:640684,uu_ga4:262904,pv_mf:718639,uu_mf:271949},{day:21,pv_ga4:577206,uu_ga4:225169,pv_mf:653964,uu_mf:229331},{day:22,pv_ga4:609545,uu_ga4:251755,pv_mf:684023,uu_mf:255639},{day:23,pv_ga4:708834,uu_ga4:317854,pv_mf:785913,uu_mf:321954},{day:24,pv_ga4:605818,uu_ga4:268906,pv_mf:681861,uu_mf:275587},{day:25,pv_ga4:361352,uu_ga4:183308,pv_mf:412062,uu_mf:188659},{day:26,pv_ga4:295523,uu_ga4:148413,pv_mf:336887,uu_mf:154525},{day:27,pv_ga4:660648,uu_ga4:266725,pv_mf:746051,uu_mf:275200},{day:28,pv_ga4:624857,uu_ga4:245698,pv_mf:708944,uu_mf:255275},{day:29,pv_ga4:602832,uu_ga4:224039,pv_mf:681147,uu_mf:232844},{day:30,pv_ga4:586202,uu_ga4:222871,pv_mf:670551,uu_mf:230431},{day:31,pv_ga4:493460,uu_ga4:195807,pv_mf:559737,uu_mf:203255}],
+      megatiempo:[{day:1,pv_ga4:51680,uu_ga4:23422,pv_mf:59001,uu_mf:31518},{day:2,pv_ga4:90394,uu_ga4:40162,pv_mf:101612,uu_mf:52955},{day:3,pv_ga4:104032,uu_ga4:46561,pv_mf:116235,uu_mf:61011},{day:4,pv_ga4:94761,uu_ga4:38021,pv_mf:107476,uu_mf:49446},{day:5,pv_ga4:483578,uu_ga4:203271,pv_mf:529721,uu_mf:250048},{day:6,pv_ga4:226959,uu_ga4:96111,pv_mf:252176,uu_mf:122143},{day:7,pv_ga4:146464,uu_ga4:63066,pv_mf:161458,uu_mf:83466},{day:8,pv_ga4:206386,uu_ga4:85708,pv_mf:226204,uu_mf:111803},{day:9,pv_ga4:117606,uu_ga4:48348,pv_mf:130230,uu_mf:64151},{day:10,pv_ga4:228802,uu_ga4:100272,pv_mf:249977,uu_mf:127672},{day:11,pv_ga4:136643,uu_ga4:54078,pv_mf:150301,uu_mf:72886},{day:12,pv_ga4:265413,uu_ga4:108864,pv_mf:296987,uu_mf:137270},{day:13,pv_ga4:246342,uu_ga4:98390,pv_mf:274325,uu_mf:128522},{day:14,pv_ga4:177232,uu_ga4:71798,pv_mf:194957,uu_mf:96018},{day:15,pv_ga4:157150,uu_ga4:61403,pv_mf:176061,uu_mf:84025},{day:16,pv_ga4:110124,uu_ga4:46813,pv_mf:123246,uu_mf:66198},{day:17,pv_ga4:71117,uu_ga4:31874,pv_mf:83021,uu_mf:44087},{day:18,pv_ga4:208803,uu_ga4:82091,pv_mf:233261,uu_mf:109473},{day:19,pv_ga4:377324,uu_ga4:163402,pv_mf:421027,uu_mf:203418},{day:20,pv_ga4:229500,uu_ga4:102314,pv_mf:255263,uu_mf:130492},{day:21,pv_ga4:199582,uu_ga4:80723,pv_mf:221741,uu_mf:105537},{day:22,pv_ga4:235357,uu_ga4:93708,pv_mf:259480,uu_mf:125131},{day:23,pv_ga4:100967,uu_ga4:40551,pv_mf:113644,uu_mf:54951},{day:24,pv_ga4:172174,uu_ga4:69887,pv_mf:191206,uu_mf:92043},{day:25,pv_ga4:129656,uu_ga4:52740,pv_mf:144868,uu_mf:71432},{day:26,pv_ga4:282971,uu_ga4:111782,pv_mf:315186,uu_mf:148839},{day:27,pv_ga4:272710,uu_ga4:111007,pv_mf:303744,uu_mf:145274},{day:28,pv_ga4:112753,uu_ga4:43843,pv_mf:124998,uu_mf:62972},{day:29,pv_ga4:217578,uu_ga4:89053,pv_mf:239343,uu_mf:122780},{day:30,pv_ga4:203468,uu_ga4:80843,pv_mf:225493,uu_mf:109638},{day:31,pv_ga4:124447,uu_ga4:50881,pv_mf:140125,uu_mf:67983}]
+    },
+    FEBRERO:{
+      meganoticias:[{day:1,pv_ga4:644161,uu_ga4:314716,pv_mf:715772,uu_mf:363065},{day:2,pv_ga4:666177,uu_ga4:320805,pv_mf:737653,uu_mf:369801},{day:3,pv_ga4:811321,uu_ga4:378505,pv_mf:947977,uu_mf:451469},{day:4,pv_ga4:701536,uu_ga4:349724,pv_mf:822365,uu_mf:414209},{day:5,pv_ga4:823890,uu_ga4:392524,pv_mf:954440,uu_mf:461898},{day:6,pv_ga4:753980,uu_ga4:354475,pv_mf:893313,uu_mf:419999},{day:7,pv_ga4:691913,uu_ga4:298019,pv_mf:817000,uu_mf:371532},{day:8,pv_ga4:545288,uu_ga4:241439,pv_mf:643310,uu_mf:306288},{day:9,pv_ga4:556881,uu_ga4:251940,pv_mf:653127,uu_mf:328901},{day:10,pv_ga4:700994,uu_ga4:302767,pv_mf:833777,uu_mf:395220},{day:11,pv_ga4:906501,uu_ga4:358347,pv_mf:1089206,uu_mf:467880},{day:12,pv_ga4:933397,uu_ga4:381222,pv_mf:1090418,uu_mf:486980},{day:13,pv_ga4:989886,uu_ga4:397934,pv_mf:1146911,uu_mf:511430},{day:14,pv_ga4:699693,uu_ga4:291210,pv_mf:833484,uu_mf:394545},{day:15,pv_ga4:585003,uu_ga4:254313,pv_mf:699096,uu_mf:328610},{day:16,pv_ga4:694772,uu_ga4:299684,pv_mf:810220,uu_mf:383494},{day:17,pv_ga4:760513,uu_ga4:330445,pv_mf:900949,uu_mf:431382},{day:18,pv_ga4:802980,uu_ga4:329649,pv_mf:953972,uu_mf:447152},{day:19,pv_ga4:732030,uu_ga4:302868,pv_mf:890160,uu_mf:423621},{day:20,pv_ga4:596305,uu_ga4:247119,pv_mf:724853,uu_mf:346115},{day:21,pv_ga4:699396,uu_ga4:280555,pv_mf:861193,uu_mf:367627},{day:22,pv_ga4:1223049,uu_ga4:362273,pv_mf:1645609,uu_mf:477466},{day:23,pv_ga4:832030,uu_ga4:301054,pv_mf:1052190,uu_mf:413495},{day:24,pv_ga4:801694,uu_ga4:284840,pv_mf:1008993,uu_mf:386135},{day:25,pv_ga4:995385,uu_ga4:384284,pv_mf:1245982,uu_mf:525616},{day:26,pv_ga4:864446,uu_ga4:337585,pv_mf:1086259,uu_mf:457613},{day:27,pv_ga4:854889,uu_ga4:318136,pv_mf:1058508,uu_mf:429050},{day:28,pv_ga4:748826,uu_ga4:273864,pv_mf:914589,uu_mf:382202}],
+      mega:[{day:1,pv_ga4:266748,uu_ga4:125855,pv_mf:299804,uu_mf:131266},{day:2,pv_ga4:304599,uu_ga4:143200,pv_mf:338306,uu_mf:149883},{day:3,pv_ga4:578299,uu_ga4:245392,pv_mf:645860,uu_mf:250726},{day:4,pv_ga4:558646,uu_ga4:235097,pv_mf:626624,uu_mf:240901},{day:5,pv_ga4:716575,uu_ga4:297832,pv_mf:792244,uu_mf:305661},{day:6,pv_ga4:681113,uu_ga4:267363,pv_mf:763152,uu_mf:273306},{day:7,pv_ga4:640979,uu_ga4:290965,pv_mf:715535,uu_mf:300222},{day:8,pv_ga4:396951,uu_ga4:203412,pv_mf:441968,uu_mf:209618},{day:9,pv_ga4:369787,uu_ga4:181460,pv_mf:415393,uu_mf:184799},{day:10,pv_ga4:620406,uu_ga4:250435,pv_mf:685463,uu_mf:260563},{day:11,pv_ga4:650033,uu_ga4:257668,pv_mf:733306,uu_mf:268098},{day:12,pv_ga4:600707,uu_ga4:244744,pv_mf:677836,uu_mf:253734},{day:13,pv_ga4:676426,uu_ga4:275834,pv_mf:753861,uu_mf:287278},{day:14,pv_ga4:520468,uu_ga4:219890,pv_mf:580588,uu_mf:223749},{day:15,pv_ga4:380387,uu_ga4:181389,pv_mf:430842,uu_mf:186520},{day:16,pv_ga4:410603,uu_ga4:201361,pv_mf:452050,uu_mf:206700},{day:17,pv_ga4:530800,uu_ga4:230559,pv_mf:604023,uu_mf:240161},{day:18,pv_ga4:545381,uu_ga4:216106,pv_mf:617368,uu_mf:222604},{day:19,pv_ga4:609719,uu_ga4:253095,pv_mf:681099,uu_mf:258198},{day:20,pv_ga4:626233,uu_ga4:266573,pv_mf:696036,uu_mf:274163},{day:21,pv_ga4:1801818,uu_ga4:709308,pv_mf:2016753,uu_mf:709851},{day:22,pv_ga4:1563754,uu_ga4:687765,pv_mf:1794972,uu_mf:685793},{day:23,pv_ga4:2053073,uu_ga4:825100,pv_mf:2256164,uu_mf:821472},{day:24,pv_ga4:2853054,uu_ga4:1093427,pv_mf:3194224,uu_mf:1086371},{day:25,pv_ga4:2351617,uu_ga4:948768,pv_mf:2732098,uu_mf:961348},{day:26,pv_ga4:2077898,uu_ga4:898602,pv_mf:2267044,uu_mf:922604},{day:27,pv_ga4:2330967,uu_ga4:981212,pv_mf:2650999,uu_mf:988639},{day:28,pv_ga4:1890888,uu_ga4:830051,pv_mf:2099840,uu_mf:835704}],
+      megatiempo:[{day:1,pv_ga4:162641,uu_ga4:59368,pv_mf:182060,uu_mf:78583},{day:2,pv_ga4:111247,uu_ga4:47280,pv_mf:123256,uu_mf:68138},{day:3,pv_ga4:48431,uu_ga4:21107,pv_mf:54716,uu_mf:29678},{day:4,pv_ga4:119121,uu_ga4:48923,pv_mf:132248,uu_mf:66617},{day:5,pv_ga4:165811,uu_ga4:67616,pv_mf:184650,uu_mf:87474},{day:6,pv_ga4:173196,uu_ga4:70682,pv_mf:192284,uu_mf:93234},{day:7,pv_ga4:107422,uu_ga4:45392,pv_mf:119516,uu_mf:60845},{day:8,pv_ga4:199997,uu_ga4:78818,pv_mf:221047,uu_mf:100660},{day:9,pv_ga4:498272,uu_ga4:196141,pv_mf:548762,uu_mf:242200},{day:10,pv_ga4:245338,uu_ga4:102509,pv_mf:274518,uu_mf:136191},{day:11,pv_ga4:194083,uu_ga4:78353,pv_mf:216000,uu_mf:105767},{day:12,pv_ga4:112735,uu_ga4:48520,pv_mf:128408,uu_mf:68934},{day:13,pv_ga4:100319,uu_ga4:43811,pv_mf:114206,uu_mf:62921},{day:14,pv_ga4:113672,uu_ga4:46406,pv_mf:126843,uu_mf:66080},{day:15,pv_ga4:68885,uu_ga4:27862,pv_mf:77585,uu_mf:41382},{day:16,pv_ga4:308647,uu_ga4:128674,pv_mf:345954,uu_mf:165269},{day:17,pv_ga4:185581,uu_ga4:86039,pv_mf:206354,uu_mf:111130},{day:18,pv_ga4:83910,uu_ga4:36925,pv_mf:95082,uu_mf:51821},{day:19,pv_ga4:240332,uu_ga4:107257,pv_mf:267950,uu_mf:147738},{day:20,pv_ga4:113332,uu_ga4:48028,pv_mf:126372,uu_mf:67202},{day:21,pv_ga4:75328,uu_ga4:30050,pv_mf:83446,uu_mf:42634},{day:22,pv_ga4:78382,uu_ga4:32532,pv_mf:87368,uu_mf:45456},{day:23,pv_ga4:337407,uu_ga4:156635,pv_mf:368974,uu_mf:199037},{day:24,pv_ga4:111695,uu_ga4:51932,pv_mf:122830,uu_mf:70287},{day:25,pv_ga4:85395,uu_ga4:37662,pv_mf:95661,uu_mf:54560},{day:26,pv_ga4:84124,uu_ga4:34393,pv_mf:95549,uu_mf:49533},{day:27,pv_ga4:262210,uu_ga4:108211,pv_mf:289898,uu_mf:142728},{day:28,pv_ga4:260056,uu_ga4:108233,pv_mf:287347,uu_mf:139964}]
+    },
+    MARZO:{
+      meganoticias:[{day:1,pv_ga4:592855,uu_ga4:209834,pv_mf:716747,uu_mf:291513},{day:2,pv_ga4:673411,uu_ga4:222509,pv_mf:832681,uu_mf:298888},{day:3,pv_ga4:595016,uu_ga4:220627,pv_mf:714371,uu_mf:315864},{day:4,pv_ga4:697411,uu_ga4:263105,pv_mf:830283,uu_mf:368177},{day:5,pv_ga4:752461,uu_ga4:300707,pv_mf:895565,uu_mf:412401},{day:6,pv_ga4:746625,uu_ga4:317331,pv_mf:871001,uu_mf:415481},{day:7,pv_ga4:719509,uu_ga4:307827,pv_mf:851970,uu_mf:410409},{day:8,pv_ga4:609784,uu_ga4:258126,pv_mf:731628,uu_mf:351284},{day:9,pv_ga4:604889,uu_ga4:259853,pv_mf:714938,uu_mf:345371},{day:10,pv_ga4:560855,uu_ga4:371764,pv_mf:677384,uu_mf:326602},{day:11,pv_ga4:692580,uu_ga4:459563,pv_mf:813083,uu_mf:393510},{day:12,pv_ga4:689057,uu_ga4:446852,pv_mf:805321,uu_mf:372161},{day:13,pv_ga4:817758,uu_ga4:487860,pv_mf:970896,uu_mf:418704},{day:14,pv_ga4:724382,uu_ga4:466983,pv_mf:891711,uu_mf:390261},{day:15,pv_ga4:702494,uu_ga4:442966,pv_mf:868102,uu_mf:379119},{day:16,pv_ga4:688143,uu_ga4:451839,pv_mf:860708,uu_mf:389430},{day:17,pv_ga4:768358,uu_ga4:511873,pv_mf:946893,uu_mf:418365},{day:18,pv_ga4:650955,uu_ga4:476204,pv_mf:780943,uu_mf:400638},{day:19,pv_ga4:641742,uu_ga4:427299,pv_mf:802547,uu_mf:350692},{day:20,pv_ga4:653639,uu_ga4:441817,pv_mf:816229,uu_mf:376721},{day:21,pv_ga4:610992,uu_ga4:380670,pv_mf:776030,uu_mf:327151},{day:22,pv_ga4:557852,uu_ga4:362118,pv_mf:694822,uu_mf:311251},{day:23,pv_ga4:498463,uu_ga4:313370,pv_mf:626879,uu_mf:285551},{day:24,pv_ga4:635609,uu_ga4:243751,pv_mf:814638,uu_mf:354926},{day:25,pv_ga4:729214,uu_ga4:316913,pv_mf:899748,uu_mf:407757},{day:26,pv_ga4:737641,uu_ga4:329870,pv_mf:898875,uu_mf:417160},{day:27,pv_ga4:873418,uu_ga4:355845,pv_mf:1079902,uu_mf:459555},{day:28,pv_ga4:983185,uu_ga4:407463,pv_mf:1215334,uu_mf:511748},{day:29,pv_ga4:797170,uu_ga4:333638,pv_mf:991600,uu_mf:426389},{day:30,pv_ga4:585786,uu_ga4:254456,pv_mf:720131,uu_mf:334601},{day:31,pv_ga4:489304,uu_ga4:222970,pv_mf:652820,uu_mf:310427}],
+      mega:[{day:1,pv_ga4:1711164,uu_ga4:723948,pv_mf:1925934,uu_mf:724693},{day:2,pv_ga4:1100615,uu_ga4:552472,pv_mf:1297684,uu_mf:537715},{day:3,pv_ga4:654974,uu_ga4:308284,pv_mf:747670,uu_mf:326735},{day:4,pv_ga4:638118,uu_ga4:266485,pv_mf:718565,uu_mf:278180},{day:5,pv_ga4:603571,uu_ga4:246657,pv_mf:677218,uu_mf:259675},{day:6,pv_ga4:547321,uu_ga4:231735,pv_mf:611193,uu_mf:239567},{day:7,pv_ga4:639622,uu_ga4:310045,pv_mf:707364,uu_mf:321719},{day:8,pv_ga4:508784,uu_ga4:315724,pv_mf:560348,uu_mf:323653},{day:9,pv_ga4:338311,uu_ga4:175649,pv_mf:380389,uu_mf:180163},{day:10,pv_ga4:616890,uu_ga4:369365,pv_mf:674521,uu_mf:295194},{day:11,pv_ga4:631006,uu_ga4:352421,pv_mf:707984,uu_mf:280102},{day:12,pv_ga4:625723,uu_ga4:340547,pv_mf:699488,uu_mf:273164},{day:13,pv_ga4:567583,uu_ga4:292826,pv_mf:638784,uu_mf:237171},{day:14,pv_ga4:540693,uu_ga4:301519,pv_mf:620954,uu_mf:237926},{day:15,pv_ga4:344734,uu_ga4:208495,pv_mf:395179,uu_mf:173179},{day:16,pv_ga4:327109,uu_ga4:205080,pv_mf:368818,uu_mf:177998},{day:17,pv_ga4:751853,uu_ga4:408009,pv_mf:849399,uu_mf:327763},{day:18,pv_ga4:986891,uu_ga4:495856,pv_mf:1105844,uu_mf:382716},{day:19,pv_ga4:627375,uu_ga4:258003,pv_mf:718217,uu_mf:267990},{day:20,pv_ga4:667313,uu_ga4:270210,pv_mf:751836,uu_mf:280584},{day:21,pv_ga4:693306,uu_ga4:325352,pv_mf:765104,uu_mf:334723},{day:22,pv_ga4:423580,uu_ga4:234768,pv_mf:462452,uu_mf:241453},{day:23,pv_ga4:457032,uu_ga4:234338,pv_mf:509905,uu_mf:240439},{day:24,pv_ga4:548571,uu_ga4:258047,pv_mf:606666,uu_mf:269153},{day:25,pv_ga4:582595,uu_ga4:248145,pv_mf:658909,uu_mf:256300},{day:26,pv_ga4:631406,uu_ga4:278964,pv_mf:705621,uu_mf:286892},{day:27,pv_ga4:673390,uu_ga4:293046,pv_mf:751357,uu_mf:306397},{day:28,pv_ga4:579957,uu_ga4:258501,pv_mf:664084,uu_mf:266971},{day:29,pv_ga4:325829,uu_ga4:169750,pv_mf:383499,uu_mf:179558},{day:30,pv_ga4:400315,uu_ga4:198249,pv_mf:449904,uu_mf:204488},{day:31,pv_ga4:569278,uu_ga4:256874,pv_mf:639176,uu_mf:263626}],
+      megatiempo:[{day:1,pv_ga4:137653,uu_ga4:58880,pv_mf:153540,uu_mf:82469},{day:2,pv_ga4:286359,uu_ga4:122249,pv_mf:317912,uu_mf:158463},{day:3,pv_ga4:258590,uu_ga4:127054,pv_mf:287266,uu_mf:162452},{day:4,pv_ga4:346328,uu_ga4:152636,pv_mf:385967,uu_mf:207556},{day:5,pv_ga4:231779,uu_ga4:93055,pv_mf:257945,uu_mf:136421},{day:6,pv_ga4:191438,uu_ga4:80269,pv_mf:214044,uu_mf:116491},{day:7,pv_ga4:81537,uu_ga4:32434,pv_mf:92356,uu_mf:49450},{day:8,pv_ga4:192817,uu_ga4:83978,pv_mf:223615,uu_mf:123403},{day:9,pv_ga4:261760,uu_ga4:110208,pv_mf:292937,uu_mf:153451},{day:10,pv_ga4:113031,uu_ga4:47184,pv_mf:129712,uu_mf:69714},{day:11,pv_ga4:105841,uu_ga4:48868,pv_mf:120579,uu_mf:65880},{day:12,pv_ga4:159999,uu_ga4:76204,pv_mf:179623,uu_mf:91740},{day:13,pv_ga4:311889,uu_ga4:133405,pv_mf:351184,uu_mf:157102},{day:14,pv_ga4:267829,uu_ga4:122862,pv_mf:300943,uu_mf:146377},{day:15,pv_ga4:225282,uu_ga4:106332,pv_mf:253615,uu_mf:123787},{day:16,pv_ga4:244688,uu_ga4:121662,pv_mf:277050,uu_mf:139141},{day:17,pv_ga4:109299,uu_ga4:52197,pv_mf:123092,uu_mf:63503},{day:18,pv_ga4:147576,uu_ga4:71996,pv_mf:170003,uu_mf:89114},{day:19,pv_ga4:304054,uu_ga4:147402,pv_mf:339666,uu_mf:170355},{day:20,pv_ga4:273379,uu_ga4:133462,pv_mf:310231,uu_mf:158302},{day:21,pv_ga4:247177,uu_ga4:117496,pv_mf:277982,uu_mf:137295},{day:22,pv_ga4:282104,uu_ga4:134543,pv_mf:321260,uu_mf:159443},{day:23,pv_ga4:594232,uu_ga4:275454,pv_mf:678311,uu_mf:322967},{day:24,pv_ga4:309185,uu_ga4:145320,pv_mf:351646,uu_mf:172292},{day:25,pv_ga4:226608,uu_ga4:98481,pv_mf:254649,uu_mf:117954},{day:26,pv_ga4:217943,uu_ga4:95337,pv_mf:244305,uu_mf:115771},{day:27,pv_ga4:285510,uu_ga4:122337,pv_mf:316341,uu_mf:143324},{day:28,pv_ga4:248221,uu_ga4:118113,pv_mf:278487,uu_mf:139147},{day:29,pv_ga4:255024,uu_ga4:110767,pv_mf:284453,uu_mf:131032},{day:30,pv_ga4:245401,uu_ga4:98546,pv_mf:274096,uu_mf:116267},{day:31,pv_ga4:169994,uu_ga4:79838,pv_mf:190797,uu_mf:93812}]
+    },
+    ABRIL:{
+      meganoticias:[{day:1,pv_ga4:409813,uu_ga4:184357,pv_mf:618475,uu_mf:290626},{day:2,pv_ga4:415656,uu_ga4:196946,pv_mf:658727,uu_mf:295368},{day:3,pv_ga4:515334,uu_ga4:239269,pv_mf:789279,uu_mf:354901},{day:4,pv_ga4:412740,uu_ga4:189750,pv_mf:619945,uu_mf:288455},{day:5,pv_ga4:458270,uu_ga4:217668,pv_mf:692876,uu_mf:313286},{day:6,pv_ga4:576690,uu_ga4:286812,pv_mf:858430,uu_mf:394681},{day:7,pv_ga4:809674,uu_ga4:634067,pv_mf:1087406,uu_mf:540032},{day:8,pv_ga4:651640,uu_ga4:346256,pv_mf:785620,uu_mf:382734},{day:9,pv_ga4:672442,uu_ga4:288184,pv_mf:820642,uu_mf:373945},{day:10,pv_ga4:847522,uu_ga4:368122,pv_mf:1015422,uu_mf:468181},{day:11,pv_ga4:813994,uu_ga4:369001,pv_mf:965527,uu_mf:466024},{day:12,pv_ga4:602529,uu_ga4:294542,pv_mf:708118,uu_mf:353867},{day:13,pv_ga4:738545,uu_ga4:351385,pv_mf:864188,uu_mf:426404},{day:14,pv_ga4:892513,uu_ga4:381200,pv_mf:1061955,uu_mf:481794},{day:15,pv_ga4:820628,uu_ga4:369529,pv_mf:970739,uu_mf:453801},{day:16,pv_ga4:680211,uu_ga4:290123,pv_mf:813303,uu_mf:372176},{day:17,pv_ga4:683611,uu_ga4:304079,pv_mf:805701,uu_mf:382743},{day:18,pv_ga4:737374,uu_ga4:356523,pv_mf:849618,uu_mf:433066},{day:19,pv_ga4:722814,uu_ga4:346594,pv_mf:850707,uu_mf:417791},{day:20,pv_ga4:742713,uu_ga4:329176,pv_mf:895105,uu_mf:412401},{day:21,pv_ga4:659387,uu_ga4:289368,pv_mf:785780,uu_mf:368843},{day:22,pv_ga4:836018,uu_ga4:266121,pv_mf:973721,uu_mf:471432},{day:23,pv_ga4:918755,uu_ga4:432694,pv_mf:1069649,uu_mf:532093},{day:24,pv_ga4:891639,uu_ga4:416059,pv_mf:1027542,uu_mf:500822},{day:25,pv_ga4:618446,uu_ga4:289460,pv_mf:722290,uu_mf:346379},{day:26,pv_ga4:560411,uu_ga4:252178,pv_mf:649623,uu_mf:305245},{day:27,pv_ga4:633420,uu_ga4:290779,pv_mf:750957,uu_mf:356001},{day:28,pv_ga4:745086,uu_ga4:337544,pv_mf:875270,uu_mf:421845},{day:29,pv_ga4:834470,uu_ga4:385155,pv_mf:981692,uu_mf:471742},{day:30,pv_ga4:713008,uu_ga4:319125,pv_mf:847292,uu_mf:397932}],
+      mega:[{day:1,pv_ga4:856303,uu_ga4:315631,pv_mf:936755,uu_mf:318250},{day:2,pv_ga4:895197,uu_ga4:321424,pv_mf:977097,uu_mf:327560},{day:3,pv_ga4:705524,uu_ga4:256242,pv_mf:781553,uu_mf:265753},{day:4,pv_ga4:559638,uu_ga4:205711,pv_mf:625101,uu_mf:212884},{day:5,pv_ga4:374053,uu_ga4:173571,pv_mf:418846,uu_mf:178433},{day:6,pv_ga4:608853,uu_ga4:313108,pv_mf:658408,uu_mf:313472},{day:7,pv_ga4:683520,uu_ga4:295330,pv_mf:751386,uu_mf:302998},{day:8,pv_ga4:730085,uu_ga4:277423,pv_mf:799894,uu_mf:290093},{day:9,pv_ga4:790259,uu_ga4:337254,pv_mf:866790,uu_mf:343181},{day:10,pv_ga4:825071,uu_ga4:338037,pv_mf:907380,uu_mf:346596},{day:11,pv_ga4:804704,uu_ga4:313622,pv_mf:907709,uu_mf:325467},{day:12,pv_ga4:783056,uu_ga4:372454,pv_mf:923513,uu_mf:378591},{day:13,pv_ga4:470373,uu_ga4:208946,pv_mf:534494,uu_mf:213609},{day:14,pv_ga4:816373,uu_ga4:314039,pv_mf:911400,uu_mf:323184},{day:15,pv_ga4:603487,uu_ga4:242186,pv_mf:677765,uu_mf:251337},{day:16,pv_ga4:492228,uu_ga4:198894,pv_mf:545301,uu_mf:205756},{day:17,pv_ga4:491353,uu_ga4:208426,pv_mf:554100,uu_mf:215908},{day:18,pv_ga4:435195,uu_ga4:190274,pv_mf:484953,uu_mf:200091},{day:19,pv_ga4:295479,uu_ga4:151749,pv_mf:326480,uu_mf:156709},{day:20,pv_ga4:316860,uu_ga4:155914,pv_mf:352936,uu_mf:161503},{day:21,pv_ga4:713489,uu_ga4:320274,pv_mf:765600,uu_mf:327846},{day:22,pv_ga4:641015,uu_ga4:270767,pv_mf:695058,uu_mf:278834},{day:23,pv_ga4:560834,uu_ga4:219709,pv_mf:613045,uu_mf:227431},{day:24,pv_ga4:609612,uu_ga4:247155,pv_mf:671510,uu_mf:255500},{day:25,pv_ga4:617481,uu_ga4:261482,pv_mf:681307,uu_mf:270981},{day:26,pv_ga4:416344,uu_ga4:214255,pv_mf:455344,uu_mf:220491},{day:27,pv_ga4:402759,uu_ga4:209371,pv_mf:440249,uu_mf:213426},{day:28,pv_ga4:583932,uu_ga4:258916,pv_mf:634686,uu_mf:267388},{day:29,pv_ga4:603127,uu_ga4:253601,pv_mf:670446,uu_mf:260458},{day:30,pv_ga4:659593,uu_ga4:288178,pv_mf:722063,uu_mf:299114}],
+      megatiempo:[{day:1,pv_ga4:176830,uu_ga4:86654,pv_mf:197298,uu_mf:102939},{day:2,pv_ga4:196733,uu_ga4:89797,pv_mf:219765,uu_mf:108057},{day:3,pv_ga4:138890,uu_ga4:64004,pv_mf:156180,uu_mf:75529},{day:4,pv_ga4:199110,uu_ga4:87869,pv_mf:221567,uu_mf:107145},{day:5,pv_ga4:397210,uu_ga4:179741,pv_mf:441047,uu_mf:207412},{day:6,pv_ga4:420732,uu_ga4:202083,pv_mf:463626,uu_mf:230489},{day:7,pv_ga4:262865,uu_ga4:119349,pv_mf:295076,uu_mf:143339},{day:8,pv_ga4:384027,uu_ga4:177974,pv_mf:430218,uu_mf:206798},{day:9,pv_ga4:335330,uu_ga4:160820,pv_mf:373397,uu_mf:189012},{day:10,pv_ga4:388558,uu_ga4:177063,pv_mf:427876,uu_mf:209893},{day:11,pv_ga4:356922,uu_ga4:149218,pv_mf:397824,uu_mf:176204},{day:12,pv_ga4:356528,uu_ga4:151298,pv_mf:398641,uu_mf:176596},{day:13,pv_ga4:337946,uu_ga4:156640,pv_mf:374041,uu_mf:180923},{day:14,pv_ga4:214990,uu_ga4:100169,pv_mf:242628,uu_mf:124085},{day:15,pv_ga4:187768,uu_ga4:85195,pv_mf:210130,uu_mf:107062},{day:16,pv_ga4:206259,uu_ga4:93163,pv_mf:230709,uu_mf:113601},{day:17,pv_ga4:199036,uu_ga4:91950,pv_mf:223474,uu_mf:110051},{day:18,pv_ga4:155595,uu_ga4:72699,pv_mf:177084,uu_mf:89755},{day:19,pv_ga4:286658,uu_ga4:127161,pv_mf:323455,uu_mf:153592},{day:20,pv_ga4:338394,uu_ga4:155579,pv_mf:381644,uu_mf:185198},{day:21,pv_ga4:262586,uu_ga4:114851,pv_mf:294845,uu_mf:140373},{day:22,pv_ga4:376152,uu_ga4:167665,pv_mf:419797,uu_mf:196527},{day:23,pv_ga4:231221,uu_ga4:104276,pv_mf:260953,uu_mf:126821},{day:24,pv_ga4:234616,uu_ga4:103591,pv_mf:261863,uu_mf:124631},{day:25,pv_ga4:173273,uu_ga4:81941,pv_mf:194645,uu_mf:100357},{day:26,pv_ga4:175806,uu_ga4:79387,pv_mf:196864,uu_mf:96426},{day:27,pv_ga4:160925,uu_ga4:73650,pv_mf:183700,uu_mf:91613},{day:28,pv_ga4:277804,uu_ga4:127872,pv_mf:317383,uu_mf:153545},{day:29,pv_ga4:394630,uu_ga4:184907,pv_mf:444980,uu_mf:220357},{day:30,pv_ga4:363421,uu_ga4:157197,pv_mf:411745,uu_mf:190924}]
+    },
+    MAYO:{
+      meganoticias:[{day:1,pv_ga4:582122,uu_ga4:264337,pv_mf:695180,uu_mf:347126},{day:2,pv_ga4:692099,uu_ga4:293773,pv_mf:841828,uu_mf:375854},{day:3,pv_ga4:639721,uu_ga4:303804,pv_mf:768044,uu_mf:377475},{day:4,pv_ga4:728528,uu_ga4:327524,pv_mf:871782,uu_mf:413900},{day:5,pv_ga4:856535,uu_ga4:361934,pv_mf:1040880,uu_mf:475402},{day:6,pv_ga4:614572,uu_ga4:264608,pv_mf:740341,uu_mf:353243},{day:7,pv_ga4:706607,uu_ga4:295182,pv_mf:856714,uu_mf:360458},{day:8,pv_ga4:837202,uu_ga4:315069,pv_mf:1038990,uu_mf:401293},{day:9,pv_ga4:641631,uu_ga4:284928,pv_mf:772914,uu_mf:354583},{day:10,pv_ga4:658871,uu_ga4:330484,pv_mf:763557,uu_mf:396534},{day:11,pv_ga4:810424,uu_ga4:376390,pv_mf:969088,uu_mf:460244},{day:12,pv_ga4:788888,uu_ga4:372759,pv_mf:943629,uu_mf:467222},{day:13,pv_ga4:801590,uu_ga4:449243,pv_mf:936928,uu_mf:530575},{day:14,pv_ga4:1004059,uu_ga4:574477,pv_mf:1152405,uu_mf:653548},{day:15,pv_ga4:748032,uu_ga4:359418,pv_mf:889390,uu_mf:438235},{day:16,pv_ga4:607188,uu_ga4:253425,pv_mf:743201,uu_mf:333945},{day:17,pv_ga4:671315,uu_ga4:308119,pv_mf:813373,uu_mf:391332},{day:18,pv_ga4:643719,uu_ga4:295300,pv_mf:754380,uu_mf:363250},{day:19,pv_ga4:760580,uu_ga4:370991,pv_mf:879359,uu_mf:435049},{day:20,pv_ga4:689026,uu_ga4:325721,pv_mf:811488,uu_mf:391456},{day:21,pv_ga4:512392,uu_ga4:233016,pv_mf:608260,uu_mf:291857},{day:22,pv_ga4:615386,uu_ga4:286291,pv_mf:718910,uu_mf:354511},{day:23,pv_ga4:677924,uu_ga4:316374,pv_mf:786452,uu_mf:380478},{day:24,pv_ga4:581303,uu_ga4:267223,pv_mf:681214,uu_mf:333411},{day:25,pv_ga4:671251,uu_ga4:301455,pv_mf:795307,uu_mf:378796},{day:26,pv_ga4:621196,uu_ga4:272404,pv_mf:745193,uu_mf:368951},{day:27,pv_ga4:516541,uu_ga4:200337,pv_mf:615089,uu_mf:291471},{day:28,pv_ga4:588553,uu_ga4:245621,pv_mf:695128,uu_mf:349837},{day:29,pv_ga4:661780,uu_ga4:280791,pv_mf:771098,uu_mf:382621},{day:30,pv_ga4:714303,uu_ga4:297712,pv_mf:853726,uu_mf:405022},{day:31,pv_ga4:455780,uu_ga4:190893,pv_mf:564181,uu_mf:256300}],
+      mega:[{day:1,pv_ga4:544243,uu_ga4:232772,pv_mf:614008,uu_mf:239343},{day:2,pv_ga4:670033,uu_ga4:304879,pv_mf:769273,uu_mf:312554},{day:3,pv_ga4:361653,uu_ga4:180260,pv_mf:415167,uu_mf:184561},{day:4,pv_ga4:343876,uu_ga4:172757,pv_mf:398437,uu_mf:180417},{day:5,pv_ga4:550264,uu_ga4:259638,pv_mf:618573,uu_mf:265805},{day:6,pv_ga4:598036,uu_ga4:252688,pv_mf:673686,uu_mf:263092},{day:7,pv_ga4:700781,uu_ga4:294005,pv_mf:784876,uu_mf:301540},{day:8,pv_ga4:802446,uu_ga4:327522,pv_mf:897311,uu_mf:338585},{day:9,pv_ga4:555393,uu_ga4:233242,pv_mf:628085,uu_mf:245359},{day:10,pv_ga4:302124,uu_ga4:156432,pv_mf:341705,uu_mf:164588},{day:11,pv_ga4:245487,uu_ga4:118325,pv_mf:278539,uu_mf:125880},{day:12,pv_ga4:517425,uu_ga4:224187,pv_mf:577116,uu_mf:235167},{day:13,pv_ga4:615521,uu_ga4:258308,pv_mf:688316,uu_mf:269047},{day:14,pv_ga4:625309,uu_ga4:260465,pv_mf:699114,uu_mf:270436},{day:15,pv_ga4:551309,uu_ga4:232985,pv_mf:620565,uu_mf:238774},{day:16,pv_ga4:520588,uu_ga4:221188,pv_mf:580152,uu_mf:227596},{day:17,pv_ga4:280826,uu_ga4:142002,pv_mf:308556,uu_mf:144539},{day:18,pv_ga4:275791,uu_ga4:132406,pv_mf:308284,uu_mf:136880},{day:19,pv_ga4:573155,uu_ga4:232418,pv_mf:632048,uu_mf:238952},{day:20,pv_ga4:629964,uu_ga4:264340,pv_mf:702840,uu_mf:271082},{day:21,pv_ga4:678016,uu_ga4:310065,pv_mf:752778,uu_mf:316268},{day:22,pv_ga4:655383,uu_ga4:372689,pv_mf:718967,uu_mf:298299},{day:23,pv_ga4:598094,uu_ga4:255244,pv_mf:656489,uu_mf:261973},{day:24,pv_ga4:316498,uu_ga4:156936,pv_mf:351750,uu_mf:160863},{day:25,pv_ga4:273519,uu_ga4:129514,pv_mf:309757,uu_mf:136333},{day:26,pv_ga4:586641,uu_ga4:247024,pv_mf:666262,uu_mf:260146},{day:27,pv_ga4:628892,uu_ga4:248238,pv_mf:704053,uu_mf:268046},{day:28,pv_ga4:594812,uu_ga4:243234,pv_mf:652561,uu_mf:256593},{day:29,pv_ga4:644018,uu_ga4:268617,pv_mf:719646,uu_mf:287748},{day:30,pv_ga4:483096,uu_ga4:207434,pv_mf:538234,uu_mf:214002},{day:31,pv_ga4:285664,uu_ga4:143639,pv_mf:325547,uu_mf:152350}],
+      megatiempo:[{day:1,pv_ga4:198527,uu_ga4:85238,pv_mf:230515,uu_mf:109322},{day:2,pv_ga4:163507,uu_ga4:78269,pv_mf:185023,uu_mf:97211},{day:3,pv_ga4:282912,uu_ga4:126970,pv_mf:321513,uu_mf:150638},{day:4,pv_ga4:287087,uu_ga4:125114,pv_mf:330868,uu_mf:152474},{day:5,pv_ga4:317512,uu_ga4:151009,pv_mf:360549,uu_mf:185650},{day:6,pv_ga4:239394,uu_ga4:115721,pv_mf:269698,uu_mf:140414},{day:7,pv_ga4:223826,uu_ga4:88163,pv_mf:250662,uu_mf:108796},{day:8,pv_ga4:242224,uu_ga4:101040,pv_mf:273525,uu_mf:124100},{day:9,pv_ga4:151278,uu_ga4:76672,pv_mf:169498,uu_mf:97797},{day:10,pv_ga4:85703,uu_ga4:41618,pv_mf:99107,uu_mf:54517},{day:11,pv_ga4:366154,uu_ga4:179244,pv_mf:415619,uu_mf:205992},{day:12,pv_ga4:427928,uu_ga4:210545,pv_mf:483271,uu_mf:248818},{day:13,pv_ga4:222420,uu_ga4:105927,pv_mf:250868,uu_mf:129199},{day:14,pv_ga4:253977,uu_ga4:117844,pv_mf:291654,uu_mf:143495},{day:15,pv_ga4:405271,uu_ga4:201303,pv_mf:456993,uu_mf:234448},{day:16,pv_ga4:328691,uu_ga4:141984,pv_mf:370321,uu_mf:171064},{day:17,pv_ga4:330829,uu_ga4:149404,pv_mf:369710,uu_mf:182400},{day:18,pv_ga4:246871,uu_ga4:119022,pv_mf:280649,uu_mf:143227},{day:19,pv_ga4:183382,uu_ga4:85169,pv_mf:207010,uu_mf:105828},{day:20,pv_ga4:159358,uu_ga4:72119,pv_mf:181555,uu_mf:90620},{day:21,pv_ga4:187558,uu_ga4:91186,pv_mf:212326,uu_mf:114579},{day:22,pv_ga4:122842,uu_ga4:58928,pv_mf:142487,uu_mf:72841},{day:23,pv_ga4:136001,uu_ga4:63677,pv_mf:155144,uu_mf:77276},{day:24,pv_ga4:240664,uu_ga4:105991,pv_mf:272313,uu_mf:126069},{day:25,pv_ga4:379232,uu_ga4:161831,pv_mf:434271,uu_mf:189877},{day:26,pv_ga4:221351,uu_ga4:102817,pv_mf:253706,uu_mf:125040},{day:27,pv_ga4:141686,uu_ga4:66849,pv_mf:160359,uu_mf:82131},{day:28,pv_ga4:174849,uu_ga4:79418,pv_mf:197298,uu_mf:101029},{day:29,pv_ga4:255732,uu_ga4:117280,pv_mf:282309,uu_mf:140580},{day:30,pv_ga4:187146,uu_ga4:88447,pv_mf:208573,uu_mf:107867},{day:31,pv_ga4:277574,uu_ga4:136210,pv_mf:311960,uu_mf:167176}]
+    },
+    JUNIO:{
+      meganoticias:[{day:1,pv_ga4:563344,uu_ga4:257736,pv_mf:679818,uu_mf:336014},{day:2,pv_ga4:671887,uu_ga4:302539,pv_mf:790599,uu_mf:373677},{day:3,pv_ga4:769201,uu_ga4:311345,pv_mf:932664,uu_mf:395734},{day:4,pv_ga4:710110,uu_ga4:293365,pv_mf:865668,uu_mf:380440},{day:5,pv_ga4:664109,uu_ga4:283205,pv_mf:824401,uu_mf:387421},{day:6,pv_ga4:763200,uu_ga4:324716,pv_mf:939776,uu_mf:416905},{day:7,pv_ga4:759150,uu_ga4:310189,pv_mf:945993,uu_mf:402752},{day:8,pv_ga4:591506,uu_ga4:254305,pv_mf:729682,uu_mf:342975},{day:9,pv_ga4:691864,uu_ga4:301343,pv_mf:825673,uu_mf:395169},{day:10,pv_ga4:631415,uu_ga4:266770,pv_mf:749691,uu_mf:338504},{day:11,pv_ga4:627398,uu_ga4:278623,pv_mf:742439,uu_mf:362353},{day:12,pv_ga4:656184,uu_ga4:269013,pv_mf:793101,uu_mf:365923},{day:13,pv_ga4:499489,uu_ga4:230190,pv_mf:595680,uu_mf:303562},{day:14,pv_ga4:582090,uu_ga4:249410,pv_mf:706438,uu_mf:343981},{day:15,pv_ga4:548553,uu_ga4:224769,pv_mf:675425,uu_mf:313942},{day:16,pv_ga4:744243,uu_ga4:330268,pv_mf:873084,uu_mf:437021},{day:17,pv_ga4:503788,uu_ga4:222756,pv_mf:597546,uu_mf:299602},{day:18,pv_ga4:679867,uu_ga4:299094,pv_mf:798839,uu_mf:381876},{day:19,pv_ga4:722486,uu_ga4:322749,pv_mf:845285,uu_mf:414362},{day:20,pv_ga4:709191,uu_ga4:300812,pv_mf:854578,uu_mf:391228},{day:21,pv_ga4:627391,uu_ga4:269761,pv_mf:759085,uu_mf:350923},{day:22,pv_ga4:594677,uu_ga4:229830,pv_mf:713029,uu_mf:315598},{day:23,pv_ga4:683939,uu_ga4:275209,pv_mf:801962,uu_mf:360297},{day:24,pv_ga4:678218,uu_ga4:296180,pv_mf:786631,uu_mf:380932},{day:25,pv_ga4:638249,uu_ga4:292996,pv_mf:752724,uu_mf:367343},{day:26,pv_ga4:684743,uu_ga4:282383,pv_mf:804605,uu_mf:373218},{day:27,pv_ga4:740020,uu_ga4:331429,pv_mf:862304,uu_mf:415896},{day:28,pv_ga4:737680,uu_ga4:327932,pv_mf:856221,uu_mf:418152},{day:29,pv_ga4:820106,uu_ga4:356724,pv_mf:965752,uu_mf:448439},{day:30,pv_ga4:660334,uu_ga4:276789,pv_mf:787567,uu_mf:370556}],
+      mega:[{day:1,pv_ga4:382667,uu_ga4:197759,pv_mf:439154,uu_mf:208912},{day:2,pv_ga4:624678,uu_ga4:277719,pv_mf:692594,uu_mf:294974},{day:3,pv_ga4:620785,uu_ga4:265805,pv_mf:686504,uu_mf:273490},{day:4,pv_ga4:647064,uu_ga4:271534,pv_mf:730851,uu_mf:281188},{day:5,pv_ga4:619974,uu_ga4:264891,pv_mf:701346,uu_mf:276449},{day:6,pv_ga4:532901,uu_ga4:232311,pv_mf:603709,uu_mf:240737},{day:7,pv_ga4:444974,uu_ga4:215613,pv_mf:508739,uu_mf:226704},{day:8,pv_ga4:450366,uu_ga4:227429,pv_mf:505798,uu_mf:236721},{day:9,pv_ga4:622196,uu_ga4:291731,pv_mf:697397,uu_mf:304693},{day:10,pv_ga4:997603,uu_ga4:391403,pv_mf:1106159,uu_mf:403933},{day:11,pv_ga4:765917,uu_ga4:329918,pv_mf:843325,uu_mf:345385},{day:12,pv_ga4:714591,uu_ga4:304755,pv_mf:800984,uu_mf:319510},{day:13,pv_ga4:512921,uu_ga4:231618,pv_mf:584568,uu_mf:239043},{day:14,pv_ga4:466357,uu_ga4:245427,pv_mf:530423,uu_mf:253144},{day:15,pv_ga4:491781,uu_ga4:247317,pv_mf:550966,uu_mf:259293},{day:16,pv_ga4:718562,uu_ga4:313999,pv_mf:802599,uu_mf:326815},{day:17,pv_ga4:654494,uu_ga4:273565,pv_mf:720922,uu_mf:285499},{day:18,pv_ga4:720732,uu_ga4:309655,pv_mf:811121,uu_mf:317980},{day:19,pv_ga4:804026,uu_ga4:346405,pv_mf:887525,uu_mf:359479},{day:20,pv_ga4:692969,uu_ga4:324095,pv_mf:771544,uu_mf:331356},{day:21,pv_ga4:500225,uu_ga4:247205,pv_mf:554980,uu_mf:257622},{day:22,pv_ga4:473937,uu_ga4:237888,pv_mf:527507,uu_mf:249778},{day:23,pv_ga4:741198,uu_ga4:307634,pv_mf:808901,uu_mf:316866},{day:24,pv_ga4:701032,uu_ga4:288155,pv_mf:771829,uu_mf:295798},{day:25,pv_ga4:726090,uu_ga4:300501,pv_mf:816004,uu_mf:313782},{day:26,pv_ga4:652255,uu_ga4:277195,pv_mf:710676,uu_mf:281895},{day:27,pv_ga4:643411,uu_ga4:291220,pv_mf:711402,uu_mf:295812},{day:28,pv_ga4:467784,uu_ga4:253258,pv_mf:517674,uu_mf:256751},{day:29,pv_ga4:523706,uu_ga4:252709,pv_mf:575742,uu_mf:260106},{day:30,pv_ga4:669596,uu_ga4:299357,pv_mf:744726,uu_mf:313206}],
+      megatiempo:[{day:1,pv_ga4:239757,uu_ga4:121772,pv_mf:270085,uu_mf:148417},{day:2,pv_ga4:226596,uu_ga4:105450,pv_mf:254754,uu_mf:130925},{day:3,pv_ga4:170117,uu_ga4:79474,pv_mf:193338,uu_mf:97061},{day:4,pv_ga4:93207,uu_ga4:44435,pv_mf:106058,uu_mf:55492},{day:5,pv_ga4:129114,uu_ga4:58031,pv_mf:146920,uu_mf:70889},{day:6,pv_ga4:234656,uu_ga4:104450,pv_mf:261167,uu_mf:125024},{day:7,pv_ga4:204211,uu_ga4:84714,pv_mf:233155,uu_mf:102086},{day:8,pv_ga4:417852,uu_ga4:184156,pv_mf:470555,uu_mf:210731},{day:9,pv_ga4:197683,uu_ga4:86851,pv_mf:221209,uu_mf:106540},{day:10,pv_ga4:254373,uu_ga4:110098,pv_mf:285253,uu_mf:131576},{day:11,pv_ga4:259252,uu_ga4:113605,pv_mf:291065,uu_mf:139216},{day:12,pv_ga4:128530,uu_ga4:50308,pv_mf:146288,uu_mf:64033},{day:13,pv_ga4:142656,uu_ga4:55225,pv_mf:159062,uu_mf:69724},{day:14,pv_ga4:316830,uu_ga4:136310,pv_mf:354877,uu_mf:161393},{day:15,pv_ga4:371611,uu_ga4:164062,pv_mf:418486,uu_mf:192149},{day:16,pv_ga4:361640,uu_ga4:154066,pv_mf:405438,uu_mf:186979},{day:17,pv_ga4:412938,uu_ga4:186015,pv_mf:464460,uu_mf:218443},{day:18,pv_ga4:250850,uu_ga4:111462,pv_mf:278083,uu_mf:136475},{day:19,pv_ga4:122482,uu_ga4:56631,pv_mf:136621,uu_mf:72389},{day:20,pv_ga4:157802,uu_ga4:77756,pv_mf:181060,uu_mf:96900},{day:21,pv_ga4:358180,uu_ga4:173055,pv_mf:401251,uu_mf:203134},{day:22,pv_ga4:422441,uu_ga4:187436,pv_mf:480953,uu_mf:219501},{day:23,pv_ga4:205735,uu_ga4:96967,pv_mf:231272,uu_mf:117206},{day:24,pv_ga4:325549,uu_ga4:144598,pv_mf:369952,uu_mf:172188},{day:25,pv_ga4:236133,uu_ga4:105687,pv_mf:265942,uu_mf:132161},{day:26,pv_ga4:151021,uu_ga4:65386,pv_mf:169501,uu_mf:81799},{day:27,pv_ga4:179833,uu_ga4:77114,pv_mf:203923,uu_mf:95989},{day:28,pv_ga4:185676,uu_ga4:86507,pv_mf:207646,uu_mf:108575},{day:29,pv_ga4:106081,uu_ga4:53246,pv_mf:120572,uu_mf:69869},{day:30,pv_ga4:103696,uu_ga4:47628,pv_mf:117518,uu_mf:61170}]
+    },
+    JULIO:{
+      meganoticias:[{day:1,pv_ga4:718252,uu_ga4:316744,pv_mf:847065,uu_mf:407063},{day:2,pv_ga4:732123,uu_ga4:333198,pv_mf:856262,uu_mf:423420},{day:3,pv_ga4:759328,uu_ga4:344234,pv_mf:881102,uu_mf:416472},{day:4,pv_ga4:606524,uu_ga4:273357,pv_mf:698869,uu_mf:340185},{day:5,pv_ga4:584552,uu_ga4:276631,pv_mf:667233,uu_mf:335326},{day:6,pv_ga4:654278,uu_ga4:309672,pv_mf:740820,uu_mf:365440},{day:7,pv_ga4:792942,uu_ga4:337768,pv_mf:917220,uu_mf:412474},{day:8,pv_ga4:725416,uu_ga4:315857,pv_mf:830558,uu_mf:383333},{day:9,pv_ga4:674745,uu_ga4:295584,pv_mf:778712,uu_mf:358060},{day:10,pv_ga4:645141,uu_ga4:286325,pv_mf:735995,uu_mf:355251},{day:11,pv_ga4:546150,uu_ga4:239858,pv_mf:625564,uu_mf:288672},{day:12,pv_ga4:486985,uu_ga4:213127,pv_mf:558083,uu_mf:259661},{day:13,pv_ga4:601577,uu_ga4:256481,pv_mf:702414,uu_mf:318969},{day:14,pv_ga4:689472,uu_ga4:296340,pv_mf:792790,uu_mf:362874},{day:15,pv_ga4:708623,uu_ga4:309600,pv_mf:814981,uu_mf:377718},{day:16,pv_ga4:535966,uu_ga4:246194,pv_mf:616910,uu_mf:299856},{day:17,pv_ga4:606095,uu_ga4:258144,pv_mf:707288,uu_mf:323922},{day:18,pv_ga4:489420,uu_ga4:195757,pv_mf:570727,uu_mf:250249},{day:19,pv_ga4:486754,uu_ga4:213095,pv_mf:559417,uu_mf:253134},{day:20,pv_ga4:575140,uu_ga4:239056,pv_mf:664816,uu_mf:292823},{day:21,pv_ga4:755449,uu_ga4:326955,pv_mf:880883,uu_mf:416523},{day:22,pv_ga4:717661,uu_ga4:306461,pv_mf:835985,uu_mf:381505},{day:23,pv_ga4:672632,uu_ga4:288996,pv_mf:778281,uu_mf:350952},{day:24,pv_ga4:663534,uu_ga4:266288,pv_mf:782327,uu_mf:334311},{day:25,pv_ga4:676697,uu_ga4:271619,pv_mf:787386,uu_mf:331959},{day:26,pv_ga4:965356,uu_ga4:352258,pv_mf:1141066,uu_mf:405879},{day:27,pv_ga4:857152,uu_ga4:328568,pv_mf:1018825,uu_mf:386492},{day:28,pv_ga4:860819,uu_ga4:328437,pv_mf:1008816,uu_mf:424656},{day:29,pv_ga4:901490,uu_ga4:375546,pv_mf:1064764,uu_mf:473452},{day:30,pv_ga4:1333863,uu_ga4:474391,pv_mf:1639982,uu_mf:590114},{day:31,pv_ga4:821852,uu_ga4:342962,pv_mf:959203,uu_mf:429262}],
+      mega:[{day:1,pv_ga4:655348,uu_ga4:273537,pv_mf:742292,uu_mf:281553},{day:2,pv_ga4:618941,uu_ga4:250801,pv_mf:699622,uu_mf:258727},{day:3,pv_ga4:602689,uu_ga4:246547,pv_mf:678523,uu_mf:255472},{day:4,pv_ga4:483422,uu_ga4:201046,pv_mf:538650,uu_mf:205749},{day:5,pv_ga4:365084,uu_ga4:189599,pv_mf:405507,uu_mf:194484},{day:6,pv_ga4:449282,uu_ga4:208089,pv_mf:501253,uu_mf:217499},{day:7,pv_ga4:547044,uu_ga4:233478,pv_mf:613469,uu_mf:241810},{day:8,pv_ga4:572515,uu_ga4:237133,pv_mf:638630,uu_mf:241140},{day:9,pv_ga4:602243,uu_ga4:244350,pv_mf:688167,uu_mf:250331},{day:10,pv_ga4:606522,uu_ga4:236762,pv_mf:674796,uu_mf:243848},{day:11,pv_ga4:541989,uu_ga4:218576,pv_mf:598221,uu_mf:224316},{day:12,pv_ga4:312457,uu_ga4:147971,pv_mf:350026,uu_mf:151833},{day:13,pv_ga4:487666,uu_ga4:201354,pv_mf:540783,uu_mf:206369},{day:14,pv_ga4:533670,uu_ga4:216449,pv_mf:595609,uu_mf:222229},{day:15,pv_ga4:635713,uu_ga4:243063,pv_mf:714412,uu_mf:252191},{day:16,pv_ga4:558562,uu_ga4:213487,pv_mf:626678,uu_mf:221833},{day:17,pv_ga4:653115,uu_ga4:257791,pv_mf:725263,uu_mf:261648},{day:18,pv_ga4:661467,uu_ga4:274018,pv_mf:745111,uu_mf:276387},{day:19,pv_ga4:386155,uu_ga4:177931,pv_mf:435097,uu_mf:181013},{day:20,pv_ga4:426517,uu_ga4:174948,pv_mf:480036,uu_mf:179644},{day:21,pv_ga4:635410,uu_ga4:247400,pv_mf:711654,uu_mf:252016},{day:22,pv_ga4:811749,uu_ga4:299324,pv_mf:904010,uu_mf:302950},{day:23,pv_ga4:606792,uu_ga4:237760,pv_mf:677251,uu_mf:241797},{day:24,pv_ga4:826107,uu_ga4:301912,pv_mf:947127,uu_mf:304901},{day:25,pv_ga4:700782,uu_ga4:265665,pv_mf:795991,uu_mf:267329},{day:26,pv_ga4:419189,uu_ga4:184263,pv_mf:481937,uu_mf:189514},{day:27,pv_ga4:342853,uu_ga4:152614,pv_mf:394068,uu_mf:156438},{day:28,pv_ga4:585948,uu_ga4:225175,pv_mf:662745,uu_mf:278819},{day:29,pv_ga4:665676,uu_ga4:289153,pv_mf:753836,uu_mf:306616},{day:30,pv_ga4:924896,uu_ga4:365378,pv_mf:1041005,uu_mf:387049},{day:31,pv_ga4:682442,uu_ga4:301294,pv_mf:785397,uu_mf:320143}],
+      megatiempo:[{day:1,pv_ga4:121034,uu_ga4:52593,pv_mf:139349,uu_mf:66866},{day:2,pv_ga4:169979,uu_ga4:69903,pv_mf:192617,uu_mf:86986},{day:3,pv_ga4:95246,uu_ga4:40336,pv_mf:107486,uu_mf:51743},{day:4,pv_ga4:110133,uu_ga4:47739,pv_mf:125435,uu_mf:61865},{day:5,pv_ga4:244127,uu_ga4:103939,pv_mf:275677,uu_mf:125735},{day:6,pv_ga4:244919,uu_ga4:107809,pv_mf:274237,uu_mf:130866},{day:7,pv_ga4:146036,uu_ga4:71601,pv_mf:164512,uu_mf:90673},{day:8,pv_ga4:194608,uu_ga4:94394,pv_mf:221620,uu_mf:115842},{day:9,pv_ga4:239274,uu_ga4:114239,pv_mf:271116,uu_mf:141075},{day:10,pv_ga4:203004,uu_ga4:95851,pv_mf:229924,uu_mf:121260},{day:11,pv_ga4:207047,uu_ga4:84961,pv_mf:233675,uu_mf:104660},{day:12,pv_ga4:174146,uu_ga4:72504,pv_mf:196532,uu_mf:91590},{day:13,pv_ga4:269858,uu_ga4:116089,pv_mf:304540,uu_mf:139186},{day:14,pv_ga4:329423,uu_ga4:154660,pv_mf:370370,uu_mf:185545},{day:15,pv_ga4:241278,uu_ga4:114509,pv_mf:268339,uu_mf:142607},{day:16,pv_ga4:200233,uu_ga4:87536,pv_mf:224135,uu_mf:112925},{day:17,pv_ga4:103694,uu_ga4:46862,pv_mf:116547,uu_mf:61766},{day:18,pv_ga4:126178,uu_ga4:55668,pv_mf:143157,uu_mf:74853},{day:19,pv_ga4:100322,uu_ga4:42915,pv_mf:115057,uu_mf:55022},{day:20,pv_ga4:323085,uu_ga4:169570,pv_mf:366046,uu_mf:201143},{day:21,pv_ga4:244639,uu_ga4:127555,pv_mf:277863,uu_mf:154505},{day:22,pv_ga4:171759,uu_ga4:76151,pv_mf:194926,uu_mf:95829},{day:23,pv_ga4:193301,uu_ga4:79601,pv_mf:221925,uu_mf:98635},{day:24,pv_ga4:154066,uu_ga4:67646,pv_mf:174018,uu_mf:84186},{day:25,pv_ga4:159798,uu_ga4:70133,pv_mf:182447,uu_mf:88081},{day:26,pv_ga4:188314,uu_ga4:88146,pv_mf:211462,uu_mf:106728},{day:27,pv_ga4:303940,uu_ga4:136192,pv_mf:343739,uu_mf:162238},{day:28,pv_ga4:240590,uu_ga4:101518,pv_mf:274639,uu_mf:125352},{day:29,pv_ga4:306818,uu_ga4:131496,pv_mf:351371,uu_mf:159235},{day:30,pv_ga4:288610,uu_ga4:120305,pv_mf:330675,uu_mf:145454},{day:31,pv_ga4:211972,uu_ga4:87728,pv_mf:241942,uu_mf:111101}]
+    },
+    AGOSTO:{
+      meganoticias:[{day:1,pv_ga4:718246,uu_ga4:295376,pv_mf:842123,uu_mf:367466},{day:2,pv_ga4:631030,uu_ga4:249130,pv_mf:741300,uu_mf:301702},{day:3,pv_ga4:879420,uu_ga4:310051,pv_mf:1043156,uu_mf:358740},{day:4,pv_ga4:699125,uu_ga4:275617,pv_mf:836385,uu_mf:348031},{day:5,pv_ga4:744985,uu_ga4:304948,pv_mf:874555,uu_mf:394582},{day:6,pv_ga4:756974,uu_ga4:318033,pv_mf:869417,uu_mf:395879},{day:7,pv_ga4:764664,uu_ga4:303749,pv_mf:888413,uu_mf:387334},{day:8,pv_ga4:614333,uu_ga4:250240,pv_mf:705262,uu_mf:314464},{day:9,pv_ga4:461584,uu_ga4:195730,pv_mf:527572,uu_mf:240524},{day:10,pv_ga4:601850,uu_ga4:252803,pv_mf:692732,uu_mf:313125},{day:11,pv_ga4:690133,uu_ga4:286499,pv_mf:814620,uu_mf:366384},{day:12,pv_ga4:601786,uu_ga4:272437,pv_mf:707867,uu_mf:332073},{day:13,pv_ga4:761661,uu_ga4:340086,pv_mf:902291,uu_mf:406578},{day:14,pv_ga4:616281,uu_ga4:288205,pv_mf:721732,uu_mf:355546},{day:15,pv_ga4:603605,uu_ga4:294103,pv_mf:699673,uu_mf:346044},{day:16,pv_ga4:579128,uu_ga4:259356,pv_mf:696461,uu_mf:329592},{day:17,pv_ga4:708741,uu_ga4:334090,pv_mf:842089,uu_mf:393407},{day:18,pv_ga4:630494,uu_ga4:302174,pv_mf:745289,uu_mf:371146},{day:19,pv_ga4:599988,uu_ga4:268828,pv_mf:716676,uu_mf:340843},{day:20,pv_ga4:678962,uu_ga4:306201,pv_mf:801816,uu_mf:372552},{day:21,pv_ga4:979352,uu_ga4:419403,pv_mf:1165574,uu_mf:497819},{day:22,pv_ga4:699622,uu_ga4:325802,pv_mf:813997,uu_mf:394376},{day:23,pv_ga4:758005,uu_ga4:369707,pv_mf:879933,uu_mf:438954},{day:24,pv_ga4:627719,uu_ga4:302824,pv_mf:723114,uu_mf:357827},{day:25,pv_ga4:702761,uu_ga4:430799,pv_mf:819725,uu_mf:388670},{day:26,pv_ga4:640399,uu_ga4:400896,pv_mf:740066,uu_mf:366461},{day:27,pv_ga4:638471,uu_ga4:420766,pv_mf:736133,uu_mf:370679},{day:28,pv_ga4:693325,uu_ga4:460912,pv_mf:788618,uu_mf:397918},{day:29,pv_ga4:565382,uu_ga4:371922,pv_mf:647683,uu_mf:314721},{day:30,pv_ga4:544639,uu_ga4:348375,pv_mf:616015,uu_mf:298946},{day:31,pv_ga4:620628,uu_ga4:377998,pv_mf:721162,uu_mf:326470}],
+      mega:[{day:1,pv_ga4:559419,uu_ga4:252492,pv_mf:644870,uu_mf:266333},{day:2,pv_ga4:308432,uu_ga4:146985,pv_mf:362069,uu_mf:154905},{day:3,pv_ga4:265190,uu_ga4:117958,pv_mf:314660,uu_mf:125342},{day:4,pv_ga4:365761,uu_ga4:153724,pv_mf:414919,uu_mf:160322},{day:5,pv_ga4:451158,uu_ga4:186434,pv_mf:515111,uu_mf:196171},{day:6,pv_ga4:563205,uu_ga4:257231,pv_mf:632936,uu_mf:262105},{day:7,pv_ga4:614241,uu_ga4:248336,pv_mf:688354,uu_mf:253428},{day:8,pv_ga4:609212,uu_ga4:261615,pv_mf:687296,uu_mf:269289},{day:9,pv_ga4:344285,uu_ga4:165108,pv_mf:391569,uu_mf:170286},{day:10,pv_ga4:294580,uu_ga4:134934,pv_mf:341353,uu_mf:141885},{day:11,pv_ga4:502263,uu_ga4:212874,pv_mf:575994,uu_mf:221721},{day:12,pv_ga4:612314,uu_ga4:234248,pv_mf:714074,uu_mf:239381},{day:13,pv_ga4:1184436,uu_ga4:262829,pv_mf:1348071,uu_mf:273385},{day:14,pv_ga4:779531,uu_ga4:254651,pv_mf:895174,uu_mf:267505},{day:15,pv_ga4:467158,uu_ga4:193604,pv_mf:541827,uu_mf:203875},{day:16,pv_ga4:289973,uu_ga4:142351,pv_mf:347507,uu_mf:153375},{day:17,pv_ga4:335660,uu_ga4:163981,pv_mf:398664,uu_mf:175607},{day:18,pv_ga4:430724,uu_ga4:178170,pv_mf:498207,uu_mf:188485},{day:19,pv_ga4:529733,uu_ga4:215122,pv_mf:625346,uu_mf:226263},{day:20,pv_ga4:505029,uu_ga4:202697,pv_mf:573972,uu_mf:213423},{day:21,pv_ga4:632700,uu_ga4:252829,pv_mf:714412,uu_mf:262433},{day:22,pv_ga4:493615,uu_ga4:209041,pv_mf:562459,uu_mf:214752},{day:23,pv_ga4:369604,uu_ga4:202345,pv_mf:427787,uu_mf:207831},{day:24,pv_ga4:326487,uu_ga4:174539,pv_mf:384426,uu_mf:186296},{day:25,pv_ga4:395969,uu_ga4:230471,pv_mf:457470,uu_mf:198125},{day:26,pv_ga4:424805,uu_ga4:231501,pv_mf:500074,uu_mf:186663},{day:27,pv_ga4:467897,uu_ga4:256751,pv_mf:538879,uu_mf:216719},{day:28,pv_ga4:454191,uu_ga4:250711,pv_mf:521925,uu_mf:197899},{day:29,pv_ga4:426585,uu_ga4:242105,pv_mf:495385,uu_mf:203228},{day:30,pv_ga4:252618,uu_ga4:162273,pv_mf:295164,uu_mf:140081},{day:31,pv_ga4:225195,uu_ga4:135034,pv_mf:266111,uu_mf:121287}],
+      megatiempo:[{day:1,pv_ga4:168061,uu_ga4:71182,pv_mf:192895,uu_mf:88914},{day:2,pv_ga4:112233,uu_ga4:47813,pv_mf:128801,uu_mf:63225},{day:3,pv_ga4:294153,uu_ga4:140841,pv_mf:336625,uu_mf:164874},{day:4,pv_ga4:231808,uu_ga4:109887,pv_mf:264970,uu_mf:135314},{day:5,pv_ga4:181748,uu_ga4:87985,pv_mf:209264,uu_mf:107887},{day:6,pv_ga4:127029,uu_ga4:60710,pv_mf:144678,uu_mf:76160},{day:7,pv_ga4:288093,uu_ga4:136689,pv_mf:327037,uu_mf:162918},{day:8,pv_ga4:216208,uu_ga4:95240,pv_mf:241339,uu_mf:115320},{day:9,pv_ga4:389193,uu_ga4:162281,pv_mf:433152,uu_mf:190469},{day:10,pv_ga4:301949,uu_ga4:133450,pv_mf:341299,uu_mf:158867},{day:11,pv_ga4:229457,uu_ga4:107205,pv_mf:259310,uu_mf:131727},{day:12,pv_ga4:205065,uu_ga4:99792,pv_mf:230672,uu_mf:120987},{day:13,pv_ga4:119629,uu_ga4:53238,pv_mf:136386,uu_mf:68295},{day:14,pv_ga4:242712,uu_ga4:100524,pv_mf:270838,uu_mf:122757},{day:15,pv_ga4:175601,uu_ga4:76581,pv_mf:198256,uu_mf:95812},{day:16,pv_ga4:219767,uu_ga4:90589,pv_mf:248608,uu_mf:112271},{day:17,pv_ga4:266538,uu_ga4:111205,pv_mf:304178,uu_mf:132029},{day:18,pv_ga4:301459,uu_ga4:129098,pv_mf:342022,uu_mf:158374},{day:19,pv_ga4:253389,uu_ga4:109260,pv_mf:284541,uu_mf:131530},{day:20,pv_ga4:382124,uu_ga4:169504,pv_mf:426404,uu_mf:195187},{day:21,pv_ga4:250837,uu_ga4:111538,pv_mf:281043,uu_mf:133158},{day:22,pv_ga4:148675,uu_ga4:61355,pv_mf:165908,uu_mf:78457},{day:23,pv_ga4:71385,uu_ga4:30572,pv_mf:79119,uu_mf:41334},{day:24,pv_ga4:163786,uu_ga4:68303,pv_mf:187101,uu_mf:84509},{day:25,pv_ga4:226481,uu_ga4:105471,pv_mf:255350,uu_mf:126728},{day:26,pv_ga4:240487,uu_ga4:113080,pv_mf:268726,uu_mf:135598},{day:27,pv_ga4:278442,uu_ga4:129194,pv_mf:311226,uu_mf:151125},{day:28,pv_ga4:213607,uu_ga4:96681,pv_mf:240101,uu_mf:118480},{day:29,pv_ga4:165763,uu_ga4:75755,pv_mf:189731,uu_mf:93179},{day:30,pv_ga4:127218,uu_ga4:54894,pv_mf:144021,uu_mf:70426},{day:31,pv_ga4:88281,uu_ga4:37674,pv_mf:100828,uu_mf:48764}]
+    },
+    SEPTIEMBRE:{
+      meganoticias:[{day:1,pv_ga4:622067,uu_ga4:274921,pv_mf:730633,uu_mf:323969},{day:2,pv_ga4:626514,uu_ga4:284283,pv_mf:724258,uu_mf:339024},{day:3,pv_ga4:598829,uu_ga4:273089,pv_mf:693555,uu_mf:332799},{day:4,pv_ga4:571619,uu_ga4:244169,pv_mf:666894,uu_mf:298299},{day:5,pv_ga4:694331,uu_ga4:288561,pv_mf:842165,uu_mf:342807},{day:6,pv_ga4:537369,uu_ga4:257326,pv_mf:592032,uu_mf:288364},{day:7,pv_ga4:593557,uu_ga4:334567,pv_mf:763327,uu_mf:310508},{day:8,pv_ga4:619867,uu_ga4:386294,pv_mf:728130,uu_mf:329849},{day:9,pv_ga4:678318,uu_ga4:417832,pv_mf:790422,uu_mf:366829},{day:10,pv_ga4:601568,uu_ga4:400040,pv_mf:686064,uu_mf:344340},{day:11,pv_ga4:568437,uu_ga4:353433,pv_mf:654031,uu_mf:310580},{day:12,pv_ga4:524964,uu_ga4:328278,pv_mf:606796,uu_mf:281786},{day:13,pv_ga4:433667,uu_ga4:283307,pv_mf:498244,uu_mf:242545},{day:14,pv_ga4:370143,uu_ga4:238100,pv_mf:424179,uu_mf:208942},{day:15,pv_ga4:549875,uu_ga4:357582,pv_mf:644696,uu_mf:308130},{day:16,pv_ga4:532361,uu_ga4:239224,pv_mf:627734,uu_mf:283754},{day:17,pv_ga4:503275,uu_ga4:234290,pv_mf:586212,uu_mf:281333},{day:18,pv_ga4:465612,uu_ga4:218572,pv_mf:553317,uu_mf:265008},{day:19,pv_ga4:516082,uu_ga4:231543,pv_mf:608320,uu_mf:287309},{day:20,pv_ga4:528897,uu_ga4:225841,pv_mf:623147,uu_mf:274002},{day:21,pv_ga4:609410,uu_ga4:294212,pv_mf:700329,uu_mf:329863},{day:22,pv_ga4:641798,uu_ga4:306722,pv_mf:733249,uu_mf:356029},{day:23,pv_ga4:605560,uu_ga4:284994,pv_mf:698852,uu_mf:341836},{day:24,pv_ga4:741834,uu_ga4:322819,pv_mf:877567,uu_mf:402140},{day:25,pv_ga4:696351,uu_ga4:325209,pv_mf:813616,uu_mf:402935},{day:26,pv_ga4:812449,uu_ga4:353197,pv_mf:947317,uu_mf:433359},{day:27,pv_ga4:635036,uu_ga4:299411,pv_mf:716446,uu_mf:356908},{day:28,pv_ga4:672294,uu_ga4:297643,pv_mf:775317,uu_mf:358029},{day:29,pv_ga4:662665,uu_ga4:303577,pv_mf:752919,uu_mf:363083},{day:30,pv_ga4:532457,uu_ga4:263531,pv_mf:612078,uu_mf:308483}],
+      mega:[{day:1,pv_ga4:316012,uu_ga4:141093,pv_mf:360483,uu_mf:147711},{day:2,pv_ga4:394365,uu_ga4:151505,pv_mf:453433,uu_mf:161180},{day:3,pv_ga4:440733,uu_ga4:171573,pv_mf:505837,uu_mf:181435},{day:4,pv_ga4:1047308,uu_ga4:371637,pv_mf:1143932,uu_mf:374090},{day:5,pv_ga4:471773,uu_ga4:219791,pv_mf:539161,uu_mf:227205},{day:6,pv_ga4:327786,uu_ga4:158668,pv_mf:355848,uu_mf:160806},{day:7,pv_ga4:319357,uu_ga4:154692,pv_mf:390068,uu_mf:139529},{day:8,pv_ga4:475626,uu_ga4:218230,pv_mf:535601,uu_mf:182759},{day:9,pv_ga4:691212,uu_ga4:310314,pv_mf:770602,uu_mf:255862},{day:10,pv_ga4:620949,uu_ga4:278627,pv_mf:688207,uu_mf:220882},{day:11,pv_ga4:648362,uu_ga4:281151,pv_mf:732124,uu_mf:216398},{day:12,pv_ga4:498192,uu_ga4:195057,pv_mf:551367,uu_mf:157512},{day:13,pv_ga4:381919,uu_ga4:150441,pv_mf:422326,uu_mf:125536},{day:14,pv_ga4:397913,uu_ga4:131490,pv_mf:435677,uu_mf:113883},{day:15,pv_ga4:490484,uu_ga4:205651,pv_mf:549249,uu_mf:172649},{day:16,pv_ga4:393031,uu_ga4:154936,pv_mf:446751,uu_mf:162497},{day:17,pv_ga4:348546,uu_ga4:140291,pv_mf:403634,uu_mf:147659},{day:18,pv_ga4:239589,uu_ga4:101193,pv_mf:279869,uu_mf:105450},{day:19,pv_ga4:275246,uu_ga4:122074,pv_mf:314741,uu_mf:127764},{day:20,pv_ga4:197876,uu_ga4:92880,pv_mf:234011,uu_mf:98483},{day:21,pv_ga4:315033,uu_ga4:149785,pv_mf:369550,uu_mf:155879},{day:22,pv_ga4:523018,uu_ga4:236255,pv_mf:603399,uu_mf:244618},{day:23,pv_ga4:567154,uu_ga4:214603,pv_mf:631532,uu_mf:218339},{day:24,pv_ga4:758924,uu_ga4:282114,pv_mf:848617,uu_mf:283871},{day:25,pv_ga4:679093,uu_ga4:293237,pv_mf:769308,uu_mf:294189},{day:26,pv_ga4:443478,uu_ga4:183901,pv_mf:499349,uu_mf:193902},{day:27,pv_ga4:275507,uu_ga4:127271,pv_mf:317718,uu_mf:132656},{day:28,pv_ga4:237489,uu_ga4:106363,pv_mf:270884,uu_mf:112155},{day:29,pv_ga4:391619,uu_ga4:167147,pv_mf:444470,uu_mf:172078},{day:30,pv_ga4:397680,uu_ga4:152183,pv_mf:448013,uu_mf:157825}],
+      megatiempo:[{day:1,pv_ga4:91107,uu_ga4:41711,pv_mf:102667,uu_mf:53964},{day:2,pv_ga4:183591,uu_ga4:89033,pv_mf:203669,uu_mf:111091},{day:3,pv_ga4:94967,uu_ga4:42296,pv_mf:107696,uu_mf:54162},{day:4,pv_ga4:169730,uu_ga4:80514,pv_mf:190348,uu_mf:98295},{day:5,pv_ga4:231086,uu_ga4:109546,pv_mf:256081,uu_mf:129449},{day:6,pv_ga4:203191,uu_ga4:89742,pv_mf:213465,uu_mf:103110},{day:7,pv_ga4:264754,uu_ga4:116169,pv_mf:308102,uu_mf:144096},{day:8,pv_ga4:182717,uu_ga4:79418,pv_mf:204047,uu_mf:97077},{day:9,pv_ga4:166160,uu_ga4:81425,pv_mf:185739,uu_mf:99710},{day:10,pv_ga4:97358,uu_ga4:45886,pv_mf:108721,uu_mf:58987},{day:11,pv_ga4:133967,uu_ga4:62470,pv_mf:148619,uu_mf:79006},{day:12,pv_ga4:142983,uu_ga4:67121,pv_mf:160394,uu_mf:85066},{day:13,pv_ga4:92696,uu_ga4:40267,pv_mf:103143,uu_mf:52149},{day:14,pv_ga4:239804,uu_ga4:103926,pv_mf:272352,uu_mf:125111},{day:15,pv_ga4:290560,uu_ga4:152564,pv_mf:322391,uu_mf:180892},{day:16,pv_ga4:171339,uu_ga4:81536,pv_mf:192274,uu_mf:100625},{day:17,pv_ga4:205687,uu_ga4:90813,pv_mf:230889,uu_mf:113862},{day:18,pv_ga4:166741,uu_ga4:76649,pv_mf:186251,uu_mf:93197},{day:19,pv_ga4:231242,uu_ga4:98120,pv_mf:259899,uu_mf:118639},{day:20,pv_ga4:196116,uu_ga4:86429,pv_mf:221586,uu_mf:106111},{day:21,pv_ga4:132080,uu_ga4:60951,pv_mf:147035,uu_mf:74478},{day:22,pv_ga4:107387,uu_ga4:48015,pv_mf:119329,uu_mf:60982},{day:23,pv_ga4:142494,uu_ga4:65316,pv_mf:159875,uu_mf:79699},{day:24,pv_ga4:161560,uu_ga4:77550,pv_mf:181122,uu_mf:94037},{day:25,pv_ga4:124692,uu_ga4:57065,pv_mf:139586,uu_mf:71414},{day:26,pv_ga4:67748,uu_ga4:30724,pv_mf:76968,uu_mf:41172},{day:27,pv_ga4:60537,uu_ga4:27706,pv_mf:68441,uu_mf:36564},{day:28,pv_ga4:338679,uu_ga4:162619,pv_mf:373580,uu_mf:184521},{day:29,pv_ga4:226933,uu_ga4:121597,pv_mf:249261,uu_mf:148792},{day:30,pv_ga4:43848,uu_ga4:18693,pv_mf:49472,uu_mf:27299}]
+    },
+    OCTUBRE:{
+      meganoticias:[{day:1,pv_ga4:591763,uu_ga4:261371,pv_mf:695584,uu_mf:326664},{day:2,pv_ga4:626759,uu_ga4:291901,pv_mf:730223,uu_mf:358678},{day:3,pv_ga4:484460,uu_ga4:216996,pv_mf:566488,uu_mf:271029},{day:4,pv_ga4:473256,uu_ga4:208659,pv_mf:555178,uu_mf:259152},{day:5,pv_ga4:477918,uu_ga4:220950,pv_mf:559280,uu_mf:274544},{day:6,pv_ga4:483959,uu_ga4:240571,pv_mf:542141,uu_mf:283187},{day:7,pv_ga4:522964,uu_ga4:249710,pv_mf:586801,uu_mf:298784},{day:8,pv_ga4:532481,uu_ga4:252186,pv_mf:610334,uu_mf:300423},{day:9,pv_ga4:581207,uu_ga4:293598,pv_mf:650045,uu_mf:336320},{day:10,pv_ga4:612107,uu_ga4:315357,pv_mf:671312,uu_mf:360201},{day:11,pv_ga4:547738,uu_ga4:283078,pv_mf:601186,uu_mf:321957},{day:12,pv_ga4:507176,uu_ga4:259391,pv_mf:559203,uu_mf:295701},{day:13,pv_ga4:683141,uu_ga4:356604,pv_mf:755118,uu_mf:102030},{day:14,pv_ga4:548205,uu_ga4:261016,pv_mf:632490,uu_mf:323863},{day:15,pv_ga4:816948,uu_ga4:416218,pv_mf:936058,uu_mf:489731},{day:16,pv_ga4:779273,uu_ga4:389483,pv_mf:881537,uu_mf:449376},{day:17,pv_ga4:620898,uu_ga4:287630,pv_mf:708352,uu_mf:333761},{day:18,pv_ga4:549782,uu_ga4:235462,pv_mf:647330,uu_mf:278980},{day:19,pv_ga4:527804,uu_ga4:245295,pv_mf:597102,uu_mf:284224},{day:20,pv_ga4:597383,uu_ga4:287456,pv_mf:683710,uu_mf:331835},{day:21,pv_ga4:697708,uu_ga4:328202,pv_mf:819524,uu_mf:405959},{day:22,pv_ga4:761648,uu_ga4:379976,pv_mf:880355,uu_mf:451505},{day:23,pv_ga4:771468,uu_ga4:384292,pv_mf:884679,uu_mf:462452},{day:24,pv_ga4:603725,uu_ga4:308204,pv_mf:688614,uu_mf:354715},{day:25,pv_ga4:652444,uu_ga4:322375,pv_mf:739458,uu_mf:374958},{day:26,pv_ga4:735832,uu_ga4:334689,pv_mf:867734,uu_mf:390450},{day:27,pv_ga4:558950,uu_ga4:247220,pv_mf:655268,uu_mf:296472},{day:28,pv_ga4:661793,uu_ga4:309779,pv_mf:758469,uu_mf:360757},{day:29,pv_ga4:598791,uu_ga4:283091,pv_mf:686796,uu_mf:338759},{day:30,pv_ga4:615877,uu_ga4:309018,pv_mf:698215,uu_mf:364722},{day:31,pv_ga4:473067,uu_ga4:232842,pv_mf:534864,uu_mf:274158}],
+      mega:[{day:1,pv_ga4:397211,uu_ga4:146546,pv_mf:450528,uu_mf:154823},{day:2,pv_ga4:376327,uu_ga4:136199,pv_mf:423891,uu_mf:145115},{day:3,pv_ga4:354866,uu_ga4:139854,pv_mf:402189,uu_mf:145274},{day:4,pv_ga4:219701,uu_ga4:99291,pv_mf:254217,uu_mf:105185},{day:5,pv_ga4:227049,uu_ga4:109876,pv_mf:263718,uu_mf:114880},{day:6,pv_ga4:336305,uu_ga4:151174,pv_mf:377209,uu_mf:154579},{day:7,pv_ga4:381424,uu_ga4:148461,pv_mf:428830,uu_mf:153214},{day:8,pv_ga4:364130,uu_ga4:132816,pv_mf:407757,uu_mf:138187},{day:9,pv_ga4:409416,uu_ga4:154601,pv_mf:459626,uu_mf:161532},{day:10,pv_ga4:350072,uu_ga4:138935,pv_mf:394789,uu_mf:143103},{day:11,pv_ga4:205041,uu_ga4:90812,pv_mf:235415,uu_mf:94427},{day:12,pv_ga4:190940,uu_ga4:88980,pv_mf:220553,uu_mf:94570},{day:13,pv_ga4:359494,uu_ga4:141214,pv_mf:405396,uu_mf:144919},{day:14,pv_ga4:543724,uu_ga4:199922,pv_mf:623875,uu_mf:201919},{day:15,pv_ga4:465859,uu_ga4:164791,pv_mf:526463,uu_mf:171979},{day:16,pv_ga4:432301,uu_ga4:158597,pv_mf:493348,uu_mf:163709},{day:17,pv_ga4:450447,uu_ga4:171896,pv_mf:527343,uu_mf:177988},{day:18,pv_ga4:254837,uu_ga4:120478,pv_mf:303638,uu_mf:124884},{day:19,pv_ga4:265229,uu_ga4:134068,pv_mf:322608,uu_mf:139844},{day:20,pv_ga4:360650,uu_ga4:149697,pv_mf:418486,uu_mf:156946},{day:21,pv_ga4:390898,uu_ga4:148048,pv_mf:442407,uu_mf:153752},{day:22,pv_ga4:383313,uu_ga4:144760,pv_mf:433383,uu_mf:150540},{day:23,pv_ga4:398061,uu_ga4:150753,pv_mf:454608,uu_mf:159282},{day:24,pv_ga4:356313,uu_ga4:132617,pv_mf:407672,uu_mf:138279},{day:25,pv_ga4:230284,uu_ga4:95349,pv_mf:265659,uu_mf:98483},{day:26,pv_ga4:215438,uu_ga4:97916,pv_mf:250540,uu_mf:103106},{day:27,pv_ga4:358136,uu_ga4:140696,pv_mf:406236,uu_mf:145443},{day:28,pv_ga4:507120,uu_ga4:188106,pv_mf:575298,uu_mf:192918},{day:29,pv_ga4:421551,uu_ga4:149262,pv_mf:475402,uu_mf:155559},{day:30,pv_ga4:400042,uu_ga4:143395,pv_mf:448523,uu_mf:147554},{day:31,pv_ga4:243954,uu_ga4:92299,pv_mf:276285,uu_mf:96176}],
+      megatiempo:[{day:1,pv_ga4:115650,uu_ga4:50082,pv_mf:130942,uu_mf:62931},{day:2,pv_ga4:67370,uu_ga4:27994,pv_mf:76509,uu_mf:37916},{day:3,pv_ga4:100885,uu_ga4:43964,pv_mf:112800,uu_mf:55530},{day:4,pv_ga4:160871,uu_ga4:77013,pv_mf:180638,uu_mf:94154},{day:5,pv_ga4:97588,uu_ga4:44525,pv_mf:110346,uu_mf:58770},{day:6,pv_ga4:49930,uu_ga4:21460,pv_mf:58790,uu_mf:30544},{day:7,pv_ga4:121408,uu_ga4:55915,pv_mf:135897,uu_mf:70086},{day:8,pv_ga4:123222,uu_ga4:57052,pv_mf:140174,uu_mf:71336},{day:9,pv_ga4:77923,uu_ga4:37311,pv_mf:87600,uu_mf:46741},{day:10,pv_ga4:62997,uu_ga4:29024,pv_mf:70680,uu_mf:37671},{day:11,pv_ga4:50476,uu_ga4:23469,pv_mf:56625,uu_mf:31202},{day:12,pv_ga4:38412,uu_ga4:18464,pv_mf:45100,uu_mf:24708},{day:13,pv_ga4:46402,uu_ga4:21782,pv_mf:52681,uu_mf:29153},{day:14,pv_ga4:125254,uu_ga4:62618,pv_mf:139235,uu_mf:76135},{day:15,pv_ga4:141106,uu_ga4:68727,pv_mf:158380,uu_mf:84936},{day:16,pv_ga4:48604,uu_ga4:22641,pv_mf:54788,uu_mf:29475},{day:17,pv_ga4:115796,uu_ga4:58390,pv_mf:129485,uu_mf:73020},{day:18,pv_ga4:133276,uu_ga4:69472,pv_mf:147829,uu_mf:84036},{day:19,pv_ga4:156664,uu_ga4:81700,pv_mf:175071,uu_mf:96782},{day:20,pv_ga4:75734,uu_ga4:36015,pv_mf:85561,uu_mf:45134},{day:21,pv_ga4:104852,uu_ga4:51007,pv_mf:118195,uu_mf:62682},{day:22,pv_ga4:79802,uu_ga4:36528,pv_mf:90645,uu_mf:46326},{day:23,pv_ga4:151823,uu_ga4:70208,pv_mf:171006,uu_mf:84190},{day:24,pv_ga4:105696,uu_ga4:48983,pv_mf:119365,uu_mf:60694},{day:25,pv_ga4:33337,uu_ga4:14545,pv_mf:38561,uu_mf:20743},{day:26,pv_ga4:45730,uu_ga4:21375,pv_mf:52101,uu_mf:28200},{day:27,pv_ga4:43035,uu_ga4:20060,pv_mf:48493,uu_mf:26847},{day:28,pv_ga4:44907,uu_ga4:19559,pv_mf:51093,uu_mf:25954},{day:29,pv_ga4:111380,uu_ga4:51975,pv_mf:125408,uu_mf:65714},{day:30,pv_ga4:81540,uu_ga4:38939,pv_mf:92300,uu_mf:48694},{day:31,pv_ga4:85355,uu_ga4:39849,pv_mf:95214,uu_mf:48988}]
+    },
+    NOVIEMBRE:{
+      meganoticias:[{day:1,pv_ga4:467368,uu_ga4:217436,pv_mf:541465,uu_mf:269289},{day:2,pv_ga4:644952,uu_ga4:313417,pv_mf:742170,uu_mf:363488},{day:3,pv_ga4:1049133,uu_ga4:640372,pv_mf:1234844,uu_mf:552777},{day:4,pv_ga4:750349,uu_ga4:450291,pv_mf:886294,uu_mf:424745},{day:5,pv_ga4:601530,uu_ga4:394446,pv_mf:709485,uu_mf:344902},{day:6,pv_ga4:617721,uu_ga4:407467,pv_mf:729301,uu_mf:357313},{day:7,pv_ga4:557797,uu_ga4:355943,pv_mf:657748,uu_mf:325738},{day:8,pv_ga4:515601,uu_ga4:345633,pv_mf:571127,uu_mf:313091},{day:9,pv_ga4:494362,uu_ga4:339245,pv_mf:550879,uu_mf:288129},{day:10,pv_ga4:578233,uu_ga4:373914,pv_mf:668264,uu_mf:323246},{day:11,pv_ga4:662299,uu_ga4:389266,pv_mf:769273,uu_mf:332518},{day:12,pv_ga4:543246,uu_ga4:363141,pv_mf:631463,uu_mf:309866},{day:13,pv_ga4:458095,uu_ga4:308380,pv_mf:528783,uu_mf:271767},{day:14,pv_ga4:580066,uu_ga4:391838,pv_mf:666781,uu_mf:338128},{day:15,pv_ga4:484965,uu_ga4:313600,pv_mf:555003,uu_mf:276850},{day:16,pv_ga4:1674835,uu_ga4:927719,pv_mf:1921198,uu_mf:755539},{day:17,pv_ga4:957994,uu_ga4:577573,pv_mf:1103419,uu_mf:506463},{day:18,pv_ga4:683986,uu_ga4:431550,pv_mf:785330,uu_mf:381706},{day:19,pv_ga4:542264,uu_ga4:348499,pv_mf:640944,uu_mf:302919},{day:20,pv_ga4:534620,uu_ga4:342290,pv_mf:615079,uu_mf:305415},{day:21,pv_ga4:538563,uu_ga4:355580,pv_mf:613645,uu_mf:311960},{day:22,pv_ga4:614953,uu_ga4:407642,pv_mf:693769,uu_mf:361358},{day:23,pv_ga4:553337,uu_ga4:362038,pv_mf:630129,uu_mf:314862},{day:24,pv_ga4:499404,uu_ga4:325087,pv_mf:579846,uu_mf:293036},{day:25,pv_ga4:523999,uu_ga4:351922,pv_mf:601829,uu_mf:315503},{day:26,pv_ga4:635700,uu_ga4:431660,pv_mf:714787,uu_mf:384022},{day:27,pv_ga4:616229,uu_ga4:390870,pv_mf:717326,uu_mf:346133},{day:28,pv_ga4:599548,uu_ga4:300535,pv_mf:693253,uu_mf:351391},{day:29,pv_ga4:520093,uu_ga4:225581,pv_mf:635013,uu_mf:262540},{day:30,pv_ga4:730527,uu_ga4:368557,pv_mf:853803,uu_mf:419355}],
+      mega:[{day:1,pv_ga4:213221,uu_ga4:84054,pv_mf:245642,uu_mf:89124},{day:2,pv_ga4:209285,uu_ga4:94534,pv_mf:246619,uu_mf:99547},{day:3,pv_ga4:338979,uu_ga4:130143,pv_mf:385541,uu_mf:135036},{day:4,pv_ga4:402004,uu_ga4:151179,pv_mf:454439,uu_mf:156367},{day:5,pv_ga4:400844,uu_ga4:150840,pv_mf:457218,uu_mf:155658},{day:6,pv_ga4:391244,uu_ga4:143133,pv_mf:445521,uu_mf:148656},{day:7,pv_ga4:343045,uu_ga4:129380,pv_mf:389215,uu_mf:133699},{day:8,pv_ga4:234176,uu_ga4:110811,pv_mf:268678,uu_mf:115684},{day:9,pv_ga4:208121,uu_ga4:95590,pv_mf:245224,uu_mf:99238},{day:10,pv_ga4:372886,uu_ga4:151182,pv_mf:423732,uu_mf:156726},{day:11,pv_ga4:412995,uu_ga4:143518,pv_mf:472787,uu_mf:150519},{day:12,pv_ga4:483932,uu_ga4:177580,pv_mf:560764,uu_mf:183466},{day:13,pv_ga4:392682,uu_ga4:130029,pv_mf:443311,uu_mf:136870},{day:14,pv_ga4:359574,uu_ga4:140898,pv_mf:417972,uu_mf:147497},{day:15,pv_ga4:212966,uu_ga4:93590,pv_mf:248545,uu_mf:99061},{day:16,pv_ga4:537279,uu_ga4:227672,pv_mf:606490,uu_mf:242675},{day:17,pv_ga4:338313,uu_ga4:140363,pv_mf:384133,uu_mf:146784},{day:18,pv_ga4:377709,uu_ga4:138349,pv_mf:433011,uu_mf:143907},{day:19,pv_ga4:378697,uu_ga4:141125,pv_mf:431583,uu_mf:146174},{day:20,pv_ga4:394000,uu_ga4:162213,pv_mf:440389,uu_mf:166889},{day:21,pv_ga4:364331,uu_ga4:149688,pv_mf:404990,uu_mf:153792},{day:22,pv_ga4:202299,uu_ga4:88525,pv_mf:230319,uu_mf:92428},{day:23,pv_ga4:204196,uu_ga4:98526,pv_mf:239768,uu_mf:104464},{day:24,pv_ga4:296772,uu_ga4:119787,pv_mf:332394,uu_mf:125388},{day:25,pv_ga4:336940,uu_ga4:126476,pv_mf:383583,uu_mf:132974},{day:26,pv_ga4:356181,uu_ga4:133025,pv_mf:401999,uu_mf:136582},{day:27,pv_ga4:374085,uu_ga4:142251,pv_mf:430428,uu_mf:149396},{day:28,pv_ga4:354530,uu_ga4:144017,pv_mf:401808,uu_mf:148551},{day:29,pv_ga4:388200,uu_ga4:160589,pv_mf:440854,uu_mf:170674},{day:30,pv_ga4:274300,uu_ga4:136277,pv_mf:339708,uu_mf:146163}],
+      megatiempo:[{day:1,pv_ga4:88908,uu_ga4:44031,pv_mf:100488,uu_mf:54551},{day:2,pv_ga4:81708,uu_ga4:40714,pv_mf:93606,uu_mf:50031},{day:3,pv_ga4:83861,uu_ga4:40108,pv_mf:94466,uu_mf:48706},{day:4,pv_ga4:96835,uu_ga4:44731,pv_mf:109119,uu_mf:54584},{day:5,pv_ga4:134236,uu_ga4:65881,pv_mf:151131,uu_mf:79137},{day:6,pv_ga4:111864,uu_ga4:53731,pv_mf:125098,uu_mf:65632},{day:7,pv_ga4:47456,uu_ga4:20536,pv_mf:53558,uu_mf:27207},{day:8,pv_ga4:63030,uu_ga4:28842,pv_mf:70480,uu_mf:36203},{day:9,pv_ga4:79419,uu_ga4:37948,pv_mf:89331,uu_mf:45740},{day:10,pv_ga4:58008,uu_ga4:28540,pv_mf:65289,uu_mf:37411},{day:11,pv_ga4:93245,uu_ga4:48126,pv_mf:105448,uu_mf:58243},{day:12,pv_ga4:174299,uu_ga4:98728,pv_mf:192042,uu_mf:118134},{day:13,pv_ga4:114193,uu_ga4:64907,pv_mf:127584,uu_mf:78491},{day:14,pv_ga4:66549,uu_ga4:33438,pv_mf:73901,uu_mf:43597},{day:15,pv_ga4:68393,uu_ga4:34714,pv_mf:76919,uu_mf:43384},{day:16,pv_ga4:39998,uu_ga4:20112,pv_mf:45133,uu_mf:26215},{day:17,pv_ga4:39313,uu_ga4:17449,pv_mf:45199,uu_mf:23701},{day:18,pv_ga4:102764,uu_ga4:52774,pv_mf:116159,uu_mf:65770},{day:19,pv_ga4:121049,uu_ga4:63722,pv_mf:134813,uu_mf:77948},{day:20,pv_ga4:117082,uu_ga4:62163,pv_mf:130604,uu_mf:76964},{day:21,pv_ga4:31435,uu_ga4:14746,pv_mf:36019,uu_mf:21135},{day:22,pv_ga4:186988,uu_ga4:103106,pv_mf:206617,uu_mf:119894},{day:23,pv_ga4:244462,uu_ga4:130709,pv_mf:276021,uu_mf:150925},{day:24,pv_ga4:222255,uu_ga4:115559,pv_mf:249843,uu_mf:134405},{day:25,pv_ga4:188224,uu_ga4:87572,pv_mf:212584,uu_mf:105020},{day:26,pv_ga4:196943,uu_ga4:93391,pv_mf:220869,uu_mf:112446},{day:27,pv_ga4:131150,uu_ga4:67066,pv_mf:146482,uu_mf:81950},{day:28,pv_ga4:116683,uu_ga4:57762,pv_mf:129779,uu_mf:68613},{day:29,pv_ga4:89472,uu_ga4:40546,pv_mf:100191,uu_mf:50521},{day:30,pv_ga4:130069,uu_ga4:64240,pv_mf:146432,uu_mf:76453}]
+    },
+    DICIEMBRE:{
+      meganoticias:[{day:1,pv_ga4:651396,uu_ga4:341621,pv_mf:734588,uu_mf:382182},{day:2,pv_ga4:466675,uu_ga4:220383,pv_mf:529616,uu_mf:265164},{day:3,pv_ga4:469168,uu_ga4:209878,pv_mf:540616,uu_mf:256788},{day:4,pv_ga4:475235,uu_ga4:237640,pv_mf:544575,uu_mf:281298},{day:5,pv_ga4:467606,uu_ga4:230212,pv_mf:536152,uu_mf:273622},{day:6,pv_ga4:535490,uu_ga4:268182,pv_mf:610613,uu_mf:306120},{day:7,pv_ga4:468620,uu_ga4:231218,pv_mf:536678,uu_mf:273582},{day:8,pv_ga4:445542,uu_ga4:213417,pv_mf:520449,uu_mf:256564},{day:9,pv_ga4:571433,uu_ga4:270043,pv_mf:662198,uu_mf:319151},{day:10,pv_ga4:1015792,uu_ga4:359824,pv_mf:1234124,uu_mf:404188},{day:11,pv_ga4:578409,uu_ga4:249798,pv_mf:673581,uu_mf:299748},{day:12,pv_ga4:453496,uu_ga4:215651,pv_mf:516866,uu_mf:256185},{day:13,pv_ga4:465360,uu_ga4:216707,pv_mf:528265,uu_mf:252642},{day:14,pv_ga4:1157692,uu_ga4:416999,pv_mf:1360350,uu_mf:464216},{day:15,pv_ga4:1248659,uu_ga4:364970,pv_mf:1556069,uu_mf:405299},{day:16,pv_ga4:737612,uu_ga4:295660,pv_mf:879455,uu_mf:332021},{day:17,pv_ga4:570975,uu_ga4:250895,pv_mf:675140,uu_mf:290740},{day:18,pv_ga4:582155,uu_ga4:242932,pv_mf:685707,uu_mf:287875},{day:19,pv_ga4:472822,uu_ga4:219593,pv_mf:552821,uu_mf:255252},{day:20,pv_ga4:418883,uu_ga4:195469,pv_mf:490637,uu_mf:235723},{day:21,pv_ga4:456558,uu_ga4:230815,pv_mf:511381,uu_mf:262056},{day:22,pv_ga4:394605,uu_ga4:193597,pv_mf:454169,uu_mf:231143},{day:23,pv_ga4:569674,uu_ga4:316472,pv_mf:638678,uu_mf:354272},{day:24,pv_ga4:526025,uu_ga4:260535,pv_mf:618971,uu_mf:292915},{day:25,pv_ga4:304133,uu_ga4:138373,pv_mf:356883,uu_mf:164447},{day:26,pv_ga4:431723,uu_ga4:206155,pv_mf:493709,uu_mf:238923},{day:27,pv_ga4:451407,uu_ga4:213244,pv_mf:507019,uu_mf:244136},{day:28,pv_ga4:470290,uu_ga4:221308,pv_mf:522958,uu_mf:257008},{day:29,pv_ga4:507883,uu_ga4:236841,pv_mf:579057,uu_mf:276439},{day:30,pv_ga4:443783,uu_ga4:204136,pv_mf:499826,uu_mf:241493},{day:31,pv_ga4:443451,uu_ga4:225843,pv_mf:503332,uu_mf:257816}],
+      mega:[{day:1,pv_ga4:323076,uu_ga4:129075,pv_mf:375193,uu_mf:138371},{day:2,pv_ga4:337079,uu_ga4:128551,pv_mf:385402,uu_mf:137163},{day:3,pv_ga4:350554,uu_ga4:131618,pv_mf:404293,uu_mf:139862},{day:4,pv_ga4:351384,uu_ga4:130851,pv_mf:400572,uu_mf:136740},{day:5,pv_ga4:303674,uu_ga4:116292,pv_mf:348620,uu_mf:120171},{day:6,pv_ga4:202135,uu_ga4:86504,pv_mf:236105,uu_mf:92033},{day:7,pv_ga4:146381,uu_ga4:65923,pv_mf:172188,uu_mf:71725},{day:8,pv_ga4:253550,uu_ga4:109976,pv_mf:297223,uu_mf:117395},{day:9,pv_ga4:418783,uu_ga4:174368,pv_mf:473144,uu_mf:180772},{day:10,pv_ga4:398064,uu_ga4:164907,pv_mf:455202,uu_mf:173784},{day:11,pv_ga4:355772,uu_ga4:141980,pv_mf:409187,uu_mf:149538},{day:12,pv_ga4:350656,uu_ga4:146080,pv_mf:396823,uu_mf:152069},{day:13,pv_ga4:296459,uu_ga4:137597,pv_mf:343104,uu_mf:143470},{day:14,pv_ga4:636235,uu_ga4:259359,pv_mf:710216,uu_mf:273671},{day:15,pv_ga4:355344,uu_ga4:148527,pv_mf:405647,uu_mf:154935},{day:16,pv_ga4:378344,uu_ga4:146742,pv_mf:430830,uu_mf:153099},{day:17,pv_ga4:572146,uu_ga4:273122,pv_mf:634260,uu_mf:272196},{day:18,pv_ga4:402975,uu_ga4:164880,pv_mf:452001,uu_mf:170477},{day:19,pv_ga4:305549,uu_ga4:117149,pv_mf:345752,uu_mf:121401},{day:20,pv_ga4:215018,uu_ga4:93987,pv_mf:248478,uu_mf:98926},{day:21,pv_ga4:188391,uu_ga4:87938,pv_mf:217277,uu_mf:91862},{day:22,pv_ga4:323088,uu_ga4:139788,pv_mf:370547,uu_mf:146629},{day:23,pv_ga4:340840,uu_ga4:142268,pv_mf:390570,uu_mf:147114},{day:24,pv_ga4:260780,uu_ga4:115273,pv_mf:300950,uu_mf:117877},{day:25,pv_ga4:277594,uu_ga4:131416,pv_mf:321478,uu_mf:135963},{day:26,pv_ga4:305242,uu_ga4:127064,pv_mf:351808,uu_mf:134063},{day:27,pv_ga4:230423,uu_ga4:101470,pv_mf:259232,uu_mf:105629},{day:28,pv_ga4:240139,uu_ga4:114296,pv_mf:270919,uu_mf:117569},{day:29,pv_ga4:317787,uu_ga4:139486,pv_mf:357747,uu_mf:145180},{day:30,pv_ga4:315915,uu_ga4:132128,pv_mf:357528,uu_mf:137080},{day:31,pv_ga4:268139,uu_ga4:122730,pv_mf:305355,uu_mf:129236}],
+      megatiempo:[{day:1,pv_ga4:149262,uu_ga4:74927,pv_mf:169043,uu_mf:88625},{day:2,pv_ga4:77352,uu_ga4:38642,pv_mf:89282,uu_mf:47738},{day:3,pv_ga4:80154,uu_ga4:39476,pv_mf:91455,uu_mf:49145},{day:4,pv_ga4:91253,uu_ga4:43449,pv_mf:103573,uu_mf:53243},{day:5,pv_ga4:108272,uu_ga4:54539,pv_mf:120906,uu_mf:64341},{day:6,pv_ga4:157489,uu_ga4:78516,pv_mf:176241,uu_mf:93262},{day:7,pv_ga4:140924,uu_ga4:73046,pv_mf:157575,uu_mf:85676},{day:8,pv_ga4:189010,uu_ga4:101004,pv_mf:210358,uu_mf:117743},{day:9,pv_ga4:115118,uu_ga4:62466,pv_mf:130601,uu_mf:74225},{day:10,pv_ga4:143834,uu_ga4:66820,pv_mf:162641,uu_mf:79815},{day:11,pv_ga4:182246,uu_ga4:80506,pv_mf:203884,uu_mf:97859},{day:12,pv_ga4:200973,uu_ga4:93367,pv_mf:222725,uu_mf:113302},{day:13,pv_ga4:199854,uu_ga4:95649,pv_mf:221649,uu_mf:114832},{day:14,pv_ga4:145949,uu_ga4:75298,pv_mf:161636,uu_mf:90001},{day:15,pv_ga4:56415,uu_ga4:27738,pv_mf:63419,uu_mf:36248},{day:16,pv_ga4:40706,uu_ga4:18241,pv_mf:46305,uu_mf:24879},{day:17,pv_ga4:117346,uu_ga4:56303,pv_mf:132375,uu_mf:68470},{day:18,pv_ga4:156547,uu_ga4:78131,pv_mf:174206,uu_mf:91914},{day:19,pv_ga4:90209,uu_ga4:45281,pv_mf:100605,uu_mf:55319},{day:20,pv_ga4:160499,uu_ga4:76791,pv_mf:176017,uu_mf:92523},{day:21,pv_ga4:164597,uu_ga4:85906,pv_mf:179748,uu_mf:102121},{day:22,pv_ga4:121776,uu_ga4:64179,pv_mf:136880,uu_mf:76800},{day:23,pv_ga4:93890,uu_ga4:50418,pv_mf:105222,uu_mf:59563},{day:24,pv_ga4:42422,uu_ga4:22463,pv_mf:47494,uu_mf:28725},{day:25,pv_ga4:70026,uu_ga4:35622,pv_mf:80068,uu_mf:42788},{day:26,pv_ga4:105613,uu_ga4:59604,pv_mf:117892,uu_mf:69613},{day:27,pv_ga4:109118,uu_ga4:60685,pv_mf:119890,uu_mf:71745},{day:28,pv_ga4:113831,uu_ga4:62947,pv_mf:125864,uu_mf:73333},{day:29,pv_ga4:93350,uu_ga4:52896,pv_mf:103195,uu_mf:65042},{day:30,pv_ga4:44528,uu_ga4:22241,pv_mf:49462,uu_mf:28736},{day:31,pv_ga4:30545,uu_ga4:14468,pv_mf:34523,uu_mf:19240}]
+    }
+  },
+  '2026': {}
+};
+
+// ─── Persist 2026 in localStorage ───────────────────────
+function loadLocal(){
+  try{ const s=localStorage.getItem('mega26'); if(s) DB['2026']=JSON.parse(s); }catch(e){}
+  try{ const u=localStorage.getItem('mega26_url'); if(u) SHEET26_URL=u; }catch(e){}
+}
+function save26(){ try{ localStorage.setItem('mega26',JSON.stringify(DB['2026'])); }catch(e){} }
+function saveUrl26config(url){ try{ localStorage.setItem('mega26_url',url); SHEET26_URL=url; }catch(e){} }
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+const ST = { site:'meganoticias', month:'ENERO', view:'monthly', metric:'pv', year:'2025' };
+const CH = {};
+
+// ═══════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════
+const fmt  = n => !n?'0':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':n.toLocaleString('es-CL');
+const fmtN = n => (n||0).toLocaleString('es-CL');
+const sum  = (a,k) => a.reduce((s,d)=>s+(d[k]||0),0);
+const avg  = (a,k) => a.length ? Math.round(sum(a,k)/a.length) : 0;
+const pct  = (a,b) => a>0 ? (b-a)/a*100 : 0;
+const sgn  = v => (v>=0?'+':'')+v.toFixed(1)+'%';
+const tc   = v => v>=0?'tp':'tn';
+const rows = (yr,mo,site) => DB[yr]?.[mo]?.[site] || [];
+// When month is TOTAL, flatten all months into a single virtual array (renumber days sequentially)
+function rowsMonth(yr,mo,site){
+  if(mo!=='TOTAL') return rows(yr,mo,site);
+  return MONTHS.flatMap(m=>rows(yr,m,site));
+}
+const hasData = (yr,mo) => Object.keys(SITES).some(s=>rows(yr,mo,s).length>0);
+const availMonths = yr => MONTHS.filter(m=>hasData(yr,m));
+
+function weeks(days){
+  const w=[]; for(let i=0;i<days.length;i+=7){
+    const c=days.slice(i,i+7);
+    w.push({lbl:`Sem ${Math.floor(i/7)+1}`,span:`${c[0].day}–${c[c.length-1].day}`,
+      pv_ga4:sum(c,'pv_ga4'),uu_ga4:sum(c,'uu_ga4'),pv_mf:sum(c,'pv_mf'),uu_mf:sum(c,'uu_mf')});
+  } return w;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATUS
+// ═══════════════════════════════════════════════════════════════
+function setSt(cls,msg,ts=''){
+  document.getElementById('sdot').className='sdot '+cls;
+  document.getElementById('smsg').textContent=msg;
+  document.getElementById('slast').textContent=ts?' · '+ts:'';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SITE TABS
+// ═══════════════════════════════════════════════════════════════
+function buildSiteTabs(){
+  const el=document.getElementById('siteTabs');
+  el.innerHTML=Object.entries(SITES).map(([id,s])=>
+    `<button class="stab${ST.site===id?' on':''}" data-s="${id}"
+      style="${ST.site===id?`background:${s.color};box-shadow:0 2px 8px ${s.color}55`:''}"
+    >${s.label}</button>`).join('');
+  el.querySelectorAll('.stab').forEach(b=>b.addEventListener('click',e=>{
+    ST.site=e.currentTarget.dataset.s;
+    document.documentElement.style.setProperty('--bc',SITES[ST.site].color);
+    buildSiteTabs(); refreshAll();
+  }));
+  document.getElementById('brandDot').style.background=SITES[ST.site].color;
+  document.documentElement.style.setProperty('--bc',SITES[ST.site].color);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// YEAR TABS
+// ═══════════════════════════════════════════════════════════════
+function setYear(y){
+  ST.year=y;
+  document.getElementById('ytab25').className='ytab y25'+(y==='2025'?' on':'');
+  document.getElementById('ytab26').className='ytab y26'+(y==='2026'?' on':'');
+  document.getElementById('ytabCmp').className='ytab cmp'+(y==='compare'?' on':'');
+  const isComp=y==='compare';
+  document.getElementById('normalView').style.display=isComp?'none':'block';
+  document.getElementById('compareView').style.display=isComp?'block':'none';
+  document.getElementById('ctrlBar').style.display=isComp?'none':'flex';
+  document.getElementById('monthRow').style.display=isComp?'none':'flex';
+  document.getElementById('kpiGrid').style.display=isComp?'none':'grid';
+  buildMonthTabs();
+  if(isComp) renderCompare(); else refreshAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MONTH TABS
+// ═══════════════════════════════════════════════════════════════
+function buildMonthTabs(){
+  const yr=ST.year==='compare'?'2025':ST.year;
+  const ms=availMonths(yr);
+  const valid=['TOTAL',...ms];
+  if(!valid.includes(ST.month)) ST.month='TOTAL';
+  const el=document.getElementById('monthRow');
+  const c=SITES[ST.site].color;
+  // TOTAL tab first
+  const totalBtn=`<button class="mbtn mbtn-total${ST.month==='TOTAL'?' on':''}" data-m="TOTAL"
+    style="${ST.month==='TOTAL'?`background:${c};font-weight:700`:'font-weight:600'}"
+  >Total año</button>`;
+  const monthBtns=ms.map(m=>{
+    const has26=hasData('2026',m);
+    return `<button class="mbtn${ST.month===m?' on':''}" data-m="${m}"
+      style="${ST.month===m?`background:${c};font-weight:700`:''}"
+    >${m.slice(0,3)}${has26?'<span class="dot26"></span>':''}</button>`;
+  }).join('');
+  el.innerHTML=totalBtn+monthBtns;
+  el.querySelectorAll('.mbtn').forEach(b=>b.addEventListener('click',e=>{
+    ST.month=e.currentTarget.dataset.m;
+    buildMonthTabs(); refreshAll();
+  }));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════════════════
+function buildControls(){
+  const c=SITES[ST.site].color;
+  const isTotal=ST.month==='TOTAL';
+  if(isTotal && ST.view!=='monthly') ST.view='monthly';
+  document.querySelectorAll('#viewTG .ttab').forEach(b=>{
+    const on=b.dataset.v===ST.view;
+    const disabled=isTotal && b.dataset.v!=='monthly';
+    b.className='ttab'+(on?' on':'');
+    b.style.background=on?c:'transparent'; b.style.color=on?'#fff':disabled?'#ccc':'#666';
+    b.style.pointerEvents=disabled?'none':'auto';
+    b.onclick=()=>{if(!disabled){ST.view=b.dataset.v;buildControls();renderCharts();}};
+  });
+  document.querySelectorAll('#metricTG .ttab').forEach(b=>{
+    const on=b.dataset.m===ST.metric;
+    b.className='ttab'+(on?' on':'');
+    b.style.background=on?'#444':'transparent'; b.style.color=on?'#fff':'#666';
+    b.onclick=()=>{ST.metric=b.dataset.m;buildControls();renderCharts();};
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KPIs
+// ═══════════════════════════════════════════════════════════════
+function renderKPIs(){
+  const yr=ST.year==='compare'?'2025':ST.year;
+  const d=rowsMonth(yr,ST.month,ST.site);
+  const c=SITES[ST.site].color;
+  const tpv=sum(d,'pv_ga4'), tuu=sum(d,'uu_ga4'), tmf=sum(d,'pv_mf'), tuu_mf=sum(d,'uu_mf');
+  const dpv=pct(tpv,tmf), duu=pct(tuu,tuu_mf);
+
+  // PV card
+  document.getElementById('kv0').textContent=fmt(tpv);
+  document.getElementById('kv0').style.color=c;
+  document.getElementById('kv2').textContent=fmt(tmf);
+  document.getElementById('kc0').style.borderTopColor=c;
+  document.getElementById('ks0').textContent=`${ST.month==='TOTAL'?'Total año':'Prom. diario'} GA4: ${fmt(ST.month==='TOTAL'?sum(d,'pv_ga4'):avg(d,'pv_ga4'))}`;
+  document.getElementById('ky0').innerHTML=`<span class="kdiff-row">
+    <span class="kpct ${dpv>=0?'pos':'neg'}">Marfeel ${dpv>=0?'+':''}${dpv.toFixed(1)}% vs GA4</span>
+  </span>`;
+
+  // UU card
+  document.getElementById('kv1').textContent=fmt(tuu);
+  document.getElementById('kv1').style.color=c;
+  document.getElementById('kv3').textContent=fmt(tuu_mf);
+  document.getElementById('kc1').style.borderTopColor=c;
+  document.getElementById('ks1').textContent=`${ST.month==='TOTAL'?'Total año':'Prom. diario'} GA4: ${fmt(ST.month==='TOTAL'?sum(d,'uu_ga4'):avg(d,'uu_ga4'))}`;
+  document.getElementById('ky1').innerHTML=`<span class="kdiff-row">
+    <span class="kpct ${duu>=0?'pos':'neg'}">Marfeel ${duu>=0?'+':''}${duu.toFixed(1)}% vs GA4</span>
+  </span>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DESTROY / CREATE CHARTS
+// ═══════════════════════════════════════════════════════════════
+function dc(k){ if(CH[k]){CH[k].destroy();delete CH[k];} }
+
+const chartOpts = (cb) => ({
+  responsive:true, maintainAspectRatio:false,
+  interaction:{mode:'index',intersect:false},
+  plugins:{legend:{labels:{color:'#888',font:{size:10,family:'Roboto'},usePointStyle:true,pointStyleWidth:7}},
+    tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtN(c.raw)}`}}},
+  scales:{x:{grid:{display:false},ticks:{color:'#bbb',font:{size:9,family:'Roboto'},maxTicksLimit:18}},
+    y:{grid:{color:'#f4f4f4'},ticks:{color:'#bbb',font:{size:9,family:'Roboto'},callback:v=>fmt(v)},border:{display:false}}}
+});
+
+function renderCharts(){
+  const yr=ST.year;
+  const color=SITES[ST.site].color;
+  const d=rowsMonth(yr,ST.month,ST.site);
+  const pk=ST.metric==='pv'?'pv_ga4':'uu_ga4';
+  const mk=ST.metric==='pv'?'pv_mf':'uu_mf';
+  const ml=ST.metric==='pv'?'Págs. Vistas':'Usuarios Únicos';
+
+  // ── MAIN CHART ──
+  let labels,ga4v,mfv;
+  if(ST.view==='monthly'){
+    const ms=availMonths(yr);
+    const agg=ms.map(m=>{const r=rows(yr,m,ST.site);return{lbl:m.slice(0,3),ga4:sum(r,pk),mf:sum(r,mk)};});
+    labels=agg.map(a=>a.lbl); ga4v=agg.map(a=>a.ga4); mfv=agg.map(a=>a.mf);
+    document.getElementById('mainTit').textContent=`${SITES[ST.site].label} · ${ml} · ${ST.month==='TOTAL'?'Total '+yr:yr}`;
+  } else if(ST.view==='weekly'){
+    const w=weeks(d); labels=w.map(x=>x.lbl); ga4v=w.map(x=>x[pk]); mfv=w.map(x=>x[mk]);
+    document.getElementById('mainTit').textContent=`${SITES[ST.site].label} · ${ml} · Semanas ${ST.month} ${yr}`;
+  } else {
+    labels=d.map(x=>x.day+''); ga4v=d.map(x=>x[pk]); mfv=d.map(x=>x[mk]);
+    document.getElementById('mainTit').textContent=`${SITES[ST.site].label} · ${ml} · ${ST.month} ${yr}`;
+  }
+
+  const bi=mfv.reduce((mi,v,i,a)=>v>a[mi]?i:mi,0);
+  const pill=document.getElementById('bestPill');
+  pill.style.display=''; pill.textContent=`Mejor: ${labels[bi]} — ${fmt(ga4v[bi])}`;
+
+  const bgGA=ga4v.map((_,i)=>i===bi?color:color+'99');
+  const bgMF=mfv.map((_,i)=>i===bi?MF_COLOR:MF_COLOR+'99');
+
+  dc('main');
+  CH.main=new Chart(document.getElementById('mainChart'),{type:'bar',
+    data:{labels,datasets:[
+      {label:'GA4',data:ga4v,backgroundColor:bgGA,borderWidth:0,borderRadius:4,borderSkipped:false},
+      {label:'Marfeel',data:mfv,backgroundColor:bgMF,borderWidth:0,borderRadius:4,borderSkipped:false}
+    ]},options:chartOpts()});
+
+  // ── LINE CHART ──
+  document.getElementById('lineTit').textContent=`${ST.month==='TOTAL'?'Total '+yr:ST.month+' '+yr} · ${SITES[ST.site].label}`;
+  dc('line');
+  CH.line=new Chart(document.getElementById('lineChart'),{type:'line',
+    data:{labels:d.map(x=>x.day+''),datasets:[
+      {label:'GA4',data:d.map(x=>x[pk]),borderColor:color,borderWidth:2.5,pointRadius:0,tension:.4,fill:false},
+      {label:'Marfeel',data:d.map(x=>x[mk]),borderColor:MF_COLOR,borderWidth:1.5,pointRadius:0,tension:.4,fill:false,borderDash:[4,3]}
+    ]},options:chartOpts()});
+
+  // ── DIFF TABLE ──
+  const dbi=d.reduce((mi,x,i,a)=>x.pv_mf>a[mi].pv_mf?i:mi,0);
+  document.getElementById('diffBody').innerHTML=d.map((x,i)=>{
+
+    return `<tr${i===dbi?' class="best"':''}><td>Día ${x.day}</td><td>${fmtN(x.pv_ga4)}</td><td>${fmtN(x.pv_mf)}</td></tr>`;
+  }).join('');
+
+  // ── COMP BARS (by PV Marfeel) ──
+  document.getElementById('compLbl').textContent=`${ST.month==='TOTAL'?'Total '+yr:ST.month+' '+yr}`;
+  const sv=Object.entries(SITES).map(([id,s])=>{
+    const r=rowsMonth(yr,ST.month,id);
+    return{id,label:s.label,color:s.color,pv:sum(r,'pv_ga4'),uu:sum(r,'uu_ga4'),mf:sum(r,'pv_mf')};
+  });
+  const mx=Math.max(...sv.map(v=>v.mf));
+  const topSite=sv.find(v=>v.mf===mx);
+  document.getElementById('compBars').innerHTML=sv.map(v=>{
+    const w=mx>0?(v.mf/mx*100):0;
+    return `<div class="cbr-item">
+      <div class="cbr-hdr"><span class="cbr-name" style="color:${v.color}">${v.label}</span><span class="cbr-val">${fmt(v.mf)}</span></div>
+      <div class="cbr-bg"><div class="cbr-fill" style="width:${w.toFixed(1)}%;background:${v.color}"></div></div>
+      <div class="cbr-sub"><span style="color:#aaa;font-size:9px;text-transform:uppercase;letter-spacing:.4px">PV Marfeel</span><span>${w.toFixed(0)}% de ${topSite.label}</span></div>
+    </div>`;
+  }).join('<hr class="hr-light"/>');
+
+  // ── WEEKLY TABLE ──
+  const ws=weeks(d);
+  const wbi=ws.reduce((mi,x,i,a)=>x.pv_mf>a[mi].pv_mf?i:mi,0);
+  document.getElementById('weekTit').textContent=`${ST.month==='TOTAL'?'Total '+yr:ST.month+' '+yr} · ${SITES[ST.site].label}`;
+  document.getElementById('weekBody').innerHTML=ws.map((w,i)=>{
+
+    return `<tr${i===wbi?' class="best"':''}><td>${w.lbl}</td><td>${w.span}</td><td>${fmtN(w.pv_ga4)}</td><td>${fmtN(w.uu_ga4)}</td><td>${fmtN(w.pv_mf)}</td><td>${fmtN(w.uu_mf)}</td></tr>`;
+  }).join('');
+}
+
+function refreshAll(){ renderKPIs(); buildControls(); renderCharts(); document.getElementById('footerTs').textContent='Actualizado: '+new Date().toLocaleString('es-CL'); }
+
+// ═══════════════════════════════════════════════════════════════
+// COMPARE VIEW
+// ═══════════════════════════════════════════════════════════════
+let cmpMetric='pv_ga4', cmpTblMetric='pv';
+
+function renderCompare(){
+  const siteColor=SITES[ST.site].color;
+  const siteLbl=SITES[ST.site].label;
+  [document.getElementById('cmpSiteLbl'),document.getElementById('cmpSiteLbl2')].forEach(el=>el&&(el.textContent=siteLbl));
+
+  const allM=MONTHS.filter(m=>hasData('2025',m)||hasData('2026',m));
+  const labels=allM.map(m=>m.slice(0,3));
+
+  // Per-site per-month totals
+  const siteKeys=Object.keys(SITES);
+  const data25={}; const data26={};
+  siteKeys.forEach(id=>{
+    data25[id]=allM.map(m=>({pv_ga4:sum(rows('2025',m,id),'pv_ga4'),pv_mf:sum(rows('2025',m,id),'pv_mf'),uu_ga4:sum(rows('2025',m,id),'uu_ga4'),uu_mf:sum(rows('2025',m,id),'uu_mf')}));
+    data26[id]=allM.map(m=>({pv_ga4:sum(rows('2026',m,id),'pv_ga4'),pv_mf:sum(rows('2026',m,id),'pv_mf'),uu_ga4:sum(rows('2026',m,id),'uu_ga4'),uu_mf:sum(rows('2026',m,id),'uu_mf')}));
+  });
+
+  // ── METRIC TOGGLES ──
+  const metricLabels={pv_ga4:'PV GA4',pv_mf:'PV Marfeel',uu_ga4:'UU GA4',uu_mf:'UU Marfeel'};
+  document.getElementById('cmpMetricLbl').textContent=metricLabels[cmpMetric];
+  document.getElementById('cmpMetricTG').querySelectorAll('.ttab').forEach(b=>{
+    const on=b.dataset.cm===cmpMetric;
+    b.className='ttab'+(on?' on':'');
+    b.style.background=on?'#444':'transparent'; b.style.color=on?'#fff':'#666';
+    b.onclick=()=>{cmpMetric=b.dataset.cm; renderCompare();};
+  });
+  document.getElementById('cmpTblMetricTG').querySelectorAll('.ttab').forEach(b=>{
+    const on=b.dataset.ctm===cmpTblMetric;
+    b.className='ttab'+(on?' on':'');
+    b.style.background=on?'#444':'transparent'; b.style.color=on?'#fff':'#666';
+    b.onclick=()=>{cmpTblMetric=b.dataset.ctm; renderCompare();};
+  });
+
+  // ── KPI RESUMEN ANUAL ──
+  document.getElementById('cmpKpiRow').innerHTML=siteKeys.map(id=>{
+    const s=SITES[id];
+    const tot25=MONTHS.reduce((acc,m)=>acc+sum(rows('2025',m,id),'pv_ga4'),0);
+    const tot26=MONTHS.reduce((acc,m)=>acc+sum(rows('2026',m,id),'pv_ga4'),0);
+    const has26=tot26>0;
+    const delta=has26?pct(tot25,tot26):null;
+    return `<div class="kcard" style="border-top:4px solid ${s.color}">
+      <div class="klbl" style="color:${s.color};font-weight:700">${s.label}</div>
+      <div style="display:flex;gap:20px;margin:8px 0 4px">
+        <div><div style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">2025</div>
+          <div style="font-size:22px;font-weight:700;color:#333">${fmt(tot25)}</div></div>
+        ${has26?`<div><div style="font-size:9px;color:${Y26_COLOR};text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">2026</div>
+          <div style="font-size:22px;font-weight:700;color:${Y26_COLOR}">${fmt(tot26)}</div></div>`:'<div style="font-size:11px;color:#ccc;align-self:center">Sin datos 2026</div>'}
+      </div>
+      ${delta!==null?`<span class="kpct ${delta>=0?'pos':'neg'}">2026 ${delta>=0?'+':''}${delta.toFixed(1)}% vs 2025</span>`:''}
+      <div style="font-size:9px;color:#bbb;margin-top:6px">PV GA4 · Total año</div>
+    </div>`;
+  }).join('');
+
+  // ── CHART 1: líneas del sitio seleccionado (ambos años, GA4 + Marfeel) ──
+  const mk1=cmpMetric; const mk2=cmpMetric==='pv_ga4'?'pv_mf':cmpMetric==='uu_ga4'?'uu_mf':null;
+  const datasets1=[
+    {label:`2025 GA4`,data:data25[ST.site].map(d=>d[cmpMetric]),borderColor:siteColor,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false},
+    {label:`2026 GA4`,data:data26[ST.site].map(d=>d[cmpMetric]),borderColor:siteColor,borderWidth:2,borderDash:[5,3],pointRadius:3,tension:.4,fill:false,pointStyle:'triangle'},
+  ];
+  if(mk2){
+    datasets1.push({label:`2025 Marfeel`,data:data25[ST.site].map(d=>d[mk2]),borderColor:MF_COLOR,borderWidth:1.5,pointRadius:2,tension:.4,fill:false});
+    datasets1.push({label:`2026 Marfeel`,data:data26[ST.site].map(d=>d[mk2]),borderColor:MF_COLOR,borderWidth:1.5,borderDash:[4,3],pointRadius:2,tension:.4,fill:false});
+  }
+  dc('c1');
+  CH.c1=new Chart(document.getElementById('cmpChart1'),{type:'line',data:{labels,datasets:datasets1},options:cmpChartOpts()});
+
+  // ── CHART 2: los 3 sitios, 2025 sólido vs 2026 punteado ──
+  const datasets2=Object.entries(SITES).flatMap(([id,s])=>[
+    {label:`${s.label} 2025`,data:data25[id].map(d=>d[cmpMetric]),borderColor:s.color,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false},
+    {label:`${s.label} 2026`,data:data26[id].map(d=>d[cmpMetric]),borderColor:s.color,borderWidth:1.5,borderDash:[5,3],pointRadius:2,tension:.4,fill:false,pointStyle:'triangle'}
+  ]);
+  dc('c2');
+  CH.c2=new Chart(document.getElementById('cmpChart2'),{type:'line',data:{labels,datasets:datasets2},options:cmpChartOpts()});
+
+  // ── TABLA DETALLADA ──
+  const ga4k=cmpTblMetric==='pv'?'pv_ga4':'uu_ga4';
+  const mfk=cmpTblMetric==='pv'?'pv_mf':'uu_mf';
+  const lbl=cmpTblMetric==='pv'?'PV':'UU';
+  document.getElementById('yoyHead').innerHTML=`<tr>
+    <th>Mes</th>
+    <th class="y25-val">${lbl} GA4 2025</th><th class="y26-val">${lbl} GA4 2026</th><th>Δ%</th>
+    <th class="y25-val">${lbl} Marfeel 2025</th><th class="y26-val">${lbl} Marfeel 2026</th><th>Δ%</th>
+  </tr>`;
+  document.getElementById('yoyBody').innerHTML=allM.map((m,i)=>{
+    const a25=data25[ST.site][i], a26=data26[ST.site][i];
+    const has26=a26[ga4k]>0||a26[mfk]>0;
+    const dga4=pct(a25[ga4k],a26[ga4k]), dmf=pct(a25[mfk],a26[mfk]);
+    return `<tr class="${has26?'':'no26'}">
+      <td style="font-weight:700">${m.slice(0,3)}</td>
+      <td class="y25-val">${fmtN(a25[ga4k])}</td>
+      <td class="y26-val">${has26?fmtN(a26[ga4k]):'—'}</td>
+      <td>${has26?`<span class="${tc(dga4)}">${sgn(dga4)}</span>`:'—'}</td>
+      <td class="y25-val">${fmtN(a25[mfk])}</td>
+      <td class="y26-val">${has26?fmtN(a26[mfk]):'—'}</td>
+      <td>${has26?`<span class="${tc(dmf)}">${sgn(dmf)}</span>`:'—'}</td>
+    </tr>`;
+  }).join('');
+
+  // ── FILA TOTAL ──
+  const tot=yr=>({
+    ga4:MONTHS.reduce((s,m)=>s+sum(rows(yr,m,ST.site),ga4k),0),
+    mf: MONTHS.reduce((s,m)=>s+sum(rows(yr,m,ST.site),mfk),0)
+  });
+  const t25=tot('2025'), t26=tot('2026');
+  const has26total=t26.ga4>0||t26.mf>0;
+  const dtga4=pct(t25.ga4,t26.ga4), dtmf=pct(t25.mf,t26.mf);
+  document.getElementById('yoyBody').innerHTML+=`<tr style="font-weight:700;background:#f8f8f8;border-top:2px solid #eee">
+    <td>Total</td>
+    <td class="y25-val">${fmtN(t25.ga4)}</td>
+    <td class="y26-val">${has26total?fmtN(t26.ga4):'—'}</td>
+    <td>${has26total?`<span class="${tc(dtga4)}">${sgn(dtga4)}</span>`:'—'}</td>
+    <td class="y25-val">${fmtN(t25.mf)}</td>
+    <td class="y26-val">${has26total?fmtN(t26.mf):'—'}</td>
+    <td>${has26total?`<span class="${tc(dtmf)}">${sgn(dtmf)}</span>`:'—'}</td>
+  </tr>`;
+}
+
+function cmpChartOpts(){
+  return {
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{labels:{color:'#888',font:{size:10,family:'Roboto'},usePointStyle:true,pointStyleWidth:7,boxHeight:2}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtN(c.raw)}`}}
+    },
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#bbb',font:{size:9,family:'Roboto'}}},
+      y:{grid:{color:'#f4f4f4'},ticks:{color:'#bbb',font:{size:9,family:'Roboto'},callback:v=>fmt(v)},border:{display:false}}
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SYNC
+// ═══════════════════════════════════════════════════════════════
+async function doSync(){
+  const btn=document.getElementById('syncBtn'), ico=document.getElementById('syncIco');
+  btn.disabled=true; ico.style.animation='spin 1s linear infinite';
+  updateBanner26();
+
+  // Sync 2026 if URL is configured
+  if(SHEET26_URL){
+    setSt('spin','Sincronizando 2026…');
+    try{
+      const exportUrl=buildExportUrl(SHEET26_URL);
+      const r=await fetch(PROXY(exportUrl),{signal:AbortSignal.timeout(20000)});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const j=await r.json();
+      if(!j?.contents) throw new Error('Sin contenido');
+      const parsed=parseCSV(j.contents);
+      const ms=MONTHS.filter(m=>parsed[m]?.meganoticias?.length>0);
+      if(ms.length){
+        ms.forEach(m=>{ DB['2026'][m]=parsed[m]; });
+        save26();
+        const ts=new Date().toLocaleTimeString('es-CL');
+        setSt('ok',`2026 sincronizado — ${ms.length} meses`,ts);
+        buildMonthTabs();
+        ST.year==='compare'?renderCompare():refreshAll();
+      }
+    }catch(e){ setSt('err','Error sincronizando 2026: '+e.message); }
+  } else {
+    setSt('ok','2025 embebido · Sin URL 2026 configurada');
+  }
+
+  btn.disabled=false; ico.style.animation='';
+}
+
+function buildExportUrl(raw){
+  const m=raw.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  const gm=raw.match(/gid=(\d+)/);
+  if(!m) throw new Error('URL inválida');
+  return `https://docs.google.com/spreadsheets/d/${m[1]}/export?format=csv${gm?'&gid='+gm[1]:''}`;
+}
+
+function updateBanner26(){
+  const banner=document.getElementById('banner26');
+  if(!banner) return;
+  if(SHEET26_URL){
+    banner.style.display='flex';
+    const short=SHEET26_URL.length>60?SHEET26_URL.slice(0,57)+'…':SHEET26_URL;
+    document.getElementById('banner26Txt').textContent=`Sheet 2026 configurado · auto-sync cada 5 min`;
+  } else {
+    banner.style.display='none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CSV PARSER
+// ═══════════════════════════════════════════════════════════════
+function parseCSV(text){
+  const lines=text.split('\n').map(l=>{
+    const cols=[]; let cur='',q=false;
+    for(const c of l){if(c==='"'){q=!q}else if(c===','&&!q){cols.push(cur.trim());cur=''}else{cur+=c}}
+    cols.push(cur.trim()); return cols;
+  });
+  const res={}; MONTHS.forEach(m=>res[m]={meganoticias:[],mega:[],megatiempo:[]});
+  const p=s=>{const n=parseInt((s||'').replace(/[.\s]/g,'').replace(',',''));return isNaN(n)?0:n;};
+  let cur=null, skip=0;
+  for(const row of lines){
+    const txt=row.join(' ').toUpperCase();
+    const found=MONTHS.find(m=>txt.includes('MEGANOTICIAS')&&txt.includes(m));
+    if(found){cur=found;skip=2;continue;}
+    if(!cur||skip-->0) continue;
+    const day=p(row[1]);
+    if(day>=1&&day<=31){
+      res[cur].meganoticias.push({day,pv_ga4:p(row[2]),uu_ga4:p(row[3]),pv_mf:p(row[4]),uu_mf:p(row[5])});
+      res[cur].mega.push({day:p(row[7]),pv_ga4:p(row[8]),uu_ga4:p(row[9]),pv_mf:p(row[10]),uu_mf:p(row[11])});
+      res[cur].megatiempo.push({day:p(row[13]),pv_ga4:p(row[14]),uu_ga4:p(row[15]),pv_mf:p(row[16]),uu_mf:p(row[17])});
+    }
+  }
+  return res;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════════════
+function openModal(){
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheetUrl').value=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${GID}`;
+  document.getElementById('manMonth').innerHTML=MONTHS.map(m=>`<option>${m}</option>`).join('');
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeModal(); });
+
+function showMTab(id){
+  document.getElementById('mtSync').style.display=id==='sync'?'block':'none';
+  document.getElementById('mtManual').style.display=id==='manual'?'block':'none';
+  document.getElementById('mtConfig').style.display=id==='config'?'block':'none';
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('on',(id==='sync'&&i===0)||(id==='manual'&&i===1)||(id==='config'&&i===2)));
+  if(id==='config'){
+    const inp=document.getElementById('url26Input');
+    if(inp && SHEET26_URL) inp.value=SHEET26_URL;
+  }
+}
+
+// ── Save 2026 URL ──
+async function saveUrl26(){
+  const url=document.getElementById('url26Input').value.trim();
+  const al=document.getElementById('configAlert');
+  if(!url){ al.className='alert err'; al.textContent='Ingresa una URL válida.'; return; }
+  try{ buildExportUrl(url); }catch(e){ al.className='alert err'; al.textContent='URL inválida: '+e.message; return; }
+  saveUrl26config(url);
+  al.className='alert inf'; al.textContent='URL guardada. Sincronizando…';
+  updateBanner26();
+  try{
+    const exportUrl=buildExportUrl(url);
+    const r=await fetch(PROXY(exportUrl),{signal:AbortSignal.timeout(20000)});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if(!j?.contents) throw new Error('Sin contenido del proxy');
+    const parsed=parseCSV(j.contents);
+    const ms=MONTHS.filter(m=>parsed[m]?.meganoticias?.length>0);
+    if(!ms.length) throw new Error('No se encontraron datos. Verifica que el Sheet sea público y tenga el formato correcto.');
+    ms.forEach(m=>{ DB['2026'][m]=parsed[m]; });
+    save26();
+    al.className='alert ok'; al.textContent=`✓ Sheet 2026 guardado y sincronizado: ${ms.join(', ')}`;
+    setSt('ok',`2026 sincronizado — ${ms.length} meses`,new Date().toLocaleTimeString('es-CL'));
+    buildMonthTabs();
+    ST.year==='compare'?renderCompare():refreshAll();
+  }catch(e){ al.className='alert err'; al.textContent='Error al sincronizar: '+e.message; }
+}
+
+// ── Import from Sheet ──
+async function loadFromSheet(){
+  const yr=document.getElementById('loadYear').value;
+  const raw=document.getElementById('sheetUrl').value.trim();
+  const al=document.getElementById('syncAlert');
+  const m=raw.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  const gm=raw.match(/gid=(\d+)/);
+  if(!m){ al.className='alert err'; al.textContent='URL inválida. Pega la URL completa del Google Sheet.'; return; }
+  const sid=m[1], gid=gm?gm[1]:GID;
+  const url=`https://docs.google.com/spreadsheets/d/${sid}/export?format=csv&gid=${gid}`;
+  al.className='alert inf'; al.textContent='Importando desde Google Sheets…';
+  try{
+    const r=await fetch(PROXY(url),{signal:AbortSignal.timeout(20000)});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if(!j?.contents) throw new Error('Sin contenido del proxy');
+    const parsed=parseCSV(j.contents);
+    const ms=MONTHS.filter(m=>parsed[m]?.meganoticias?.length>0);
+    if(!ms.length) throw new Error('No se encontraron datos. Verifica que el Sheet sea público y tenga el formato correcto.');
+    ms.forEach(m=>{ DB[yr][m]=parsed[m]; });
+    if(yr==='2026') save26();
+    al.className='alert ok'; al.textContent=`✓ Datos ${yr} importados: ${ms.join(', ')}`;
+    setSt('ok',`${yr} actualizado — ${ms.length} meses`,new Date().toLocaleTimeString('es-CL'));
+    buildMonthTabs();
+    ST.year==='compare'?renderCompare():refreshAll();
+  }catch(e){ al.className='alert err'; al.textContent='Error: '+e.message; }
+}
+
+// ── File upload ──
+function handleFileUpload(evt){
+  const file=evt.target.files[0]; if(!file) return;
+  const yr=document.getElementById('loadYear').value;
+  const al=document.getElementById('syncAlert');
+  al.className='alert inf'; al.textContent='Leyendo archivo…';
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const parsed=parseCSV(e.target.result);
+      const ms=MONTHS.filter(m=>parsed[m]?.meganoticias?.length>0);
+      if(!ms.length) throw new Error('No se encontraron datos en el archivo.');
+      ms.forEach(m=>{ DB[yr][m]=parsed[m]; });
+      if(yr==='2026') save26();
+      al.className='alert ok'; al.textContent=`✓ Archivo importado para ${yr}: ${ms.join(', ')}`;
+      buildMonthTabs();
+      ST.year==='compare'?renderCompare():refreshAll();
+    }catch(e){ al.className='alert err'; al.textContent='Error: '+e.message; }
+  };
+  reader.readAsText(file);
+}
+
+// ── Manual form ──
+function buildManualForm(){
+  const yr=document.getElementById('manYear').value;
+  const mo=document.getElementById('manMonth').value;
+  const site=document.getElementById('manSite').value;
+  const existing=rows(yr,mo,site);
+  const days=existing.length>0?existing:Array.from({length:31},(_,i)=>({day:i+1,pv_ga4:0,uu_ga4:0,pv_mf:0,uu_mf:0}));
+  document.getElementById('manRows').innerHTML=days.map(d=>`
+    <div class="man-row" data-day="${d.day}">
+      <span class="day-lbl">Día ${d.day}</span>
+      <input class="ga4-inp" type="number" placeholder="0" value="${d.pv_ga4||''}" data-f="pv_ga4"/>
+      <input class="ga4-inp" type="number" placeholder="0" value="${d.uu_ga4||''}" data-f="uu_ga4"/>
+      <input class="mf-inp"  type="number" placeholder="0" value="${d.pv_mf||''}"  data-f="pv_mf"/>
+      <input class="mf-inp"  type="number" placeholder="0" value="${d.uu_mf||''}"  data-f="uu_mf"/>
+    </div>`).join('');
+  document.getElementById('manualFormWrap').style.display='block';
+}
+
+function saveManual(){
+  const yr=document.getElementById('manYear').value;
+  const mo=document.getElementById('manMonth').value;
+  const site=document.getElementById('manSite').value;
+  const data=[];
+  document.querySelectorAll('#manRows [data-day]').forEach(row=>{
+    const day=parseInt(row.dataset.day);
+    const v={}; row.querySelectorAll('input').forEach(inp=>v[inp.dataset.f]=parseInt(inp.value)||0);
+    if(Object.values(v).some(x=>x>0)) data.push({day,...v});
+  });
+  const al=document.getElementById('manualAlert');
+  if(!data.length){ al.className='alert err'; al.textContent='No hay datos para guardar.'; return; }
+  if(!DB[yr][mo]) DB[yr][mo]={meganoticias:[],mega:[],megatiempo:[]};
+  DB[yr][mo][site]=data;
+  if(yr==='2026') save26();
+  al.className='alert ok'; al.textContent=`✓ Guardados ${data.length} días · ${SITES[site].label} · ${mo} ${yr}`;
+  setSt('ok',`${yr} · ${mo} · ${SITES[site].label} guardado`);
+  buildMonthTabs();
+  ST.year==='compare'?renderCompare():refreshAll();
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// ANNUAL TOTALS CHART
+// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+loadLocal();
+buildSiteTabs();
+buildMonthTabs();
+refreshAll();
+updateBanner26();
+doSync();
+setInterval(doSync, 5*60*1000);
+</script>
+</body>
+</html>
