@@ -29,7 +29,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
 /* ── HEADER ── */
 .hdr{background:var(--card);border-bottom:1px solid var(--border);padding:0 36px;position:sticky;top:0;z-index:300;box-shadow:0 2px 16px rgba(0,0,0,.07)}@media(max-width:600px){.hdr{padding:0 14px}.hdr-in{height:58px;gap:10px}.brand-dot{width:34px;height:34px;font-size:15px}.hdr-title strong{font-size:14px}.hdr-title span{display:none}.hdr-right .btn:not(.solid){display:none}}
 .hdr-in{max-width:1480px;margin:0 auto;display:flex;align-items:center;height:72px;gap:20px}
-.brand-dot{width:42px;height:42px;border-radius:12px;background:var(--bc);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:18px;flex-shrink:0;transition:background .3s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.brand-dot{width:42px;height:42px;border-radius:12px;background:var(--bc);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .3s;box-shadow:0 2px 8px rgba(0,0,0,.15);overflow:hidden;padding:6px}
 .hdr-title{line-height:1.3}
 .hdr-title strong{font-size:17px;font-weight:800;display:block;letter-spacing:-.3px}
 .hdr-title span{font-size:11px;color:var(--sub)}
@@ -210,7 +210,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
 <!-- ═══ HEADER ═══ -->
 <header class="hdr">
   <div class="hdr-in">
-    <div class="brand-dot" id="brandDot">M</div>
+    <div class="brand-dot" id="brandDot"><img id="brandImg" src="" style="width:26px;height:26px;object-fit:contain;border-radius:4px"/></div>
     <div class="hdr-title"><strong id="hdrMain">Dashboard Métricas</strong><span id="hdrSub">Mega · 2025–2026</span></div>
     <div class="site-tabs" id="siteTabs"></div>
     <div class="hdr-right">
@@ -302,12 +302,6 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
     <span class="best-pill" id="bestPill" style="display:none"></span>
   </div>
 
-  <!-- ══ ALERTS ══ -->
-  <div class="alert-panel" id="alertPanel">
-    <div class="alert-panel-title">⚡ Alertas y anomalías <span id="alertCount" style="background:#F44336;color:#fff;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:4px"></span></div>
-    <div class="alert-list" id="alertList"></div>
-  </div>
-
   <!-- ══ NORMAL VIEW ══ -->
   <div id="normalView">
     <!-- Row 1: main chart + comp bars -->
@@ -345,6 +339,12 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
     </div>
   </div>
 
+  <!-- ══ ALERTS ══ -->
+  <div class="alert-panel" id="alertPanel">
+    <div class="alert-panel-title">⚡ Alertas y anomalías <span id="alertCount" style="background:#F44336;color:#fff;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:4px"></span></div>
+    <div class="alert-list" id="alertList"></div>
+  </div>
+
   <!-- ══ COMPARE VIEW ══ -->
   <div id="compareView" style="display:none">
 
@@ -354,22 +354,36 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
     <!-- ── INSIGHTS ROW ── -->
     <div id="cmpInsights" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px"></div>
 
-    <!-- Selector métrica comparativa -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-      <span style="font-size:11px;color:#888;font-weight:600">Métrica:</span>
-      <div class="tgrp" id="cmpMetricTG">
-        <button class="ttab" data-cm="pv_ga4">PV GA4</button>
-        <button class="ttab on" data-cm="pv_mf">PV Marfeel</button>
-        <button class="ttab" data-cm="uu_ga4">UU GA4</button>
-        <button class="ttab" data-cm="uu_mf">UU Marfeel</button>
+    <!-- Selector vista + métrica comparativa -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap;padding:14px 18px;background:var(--card);border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.04)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.6px">Vista:</span>
+        <div class="tgrp" id="cmpViewTG">
+          <button class="ttab on" data-cv="annual">Total año</button>
+          <button class="ttab" data-cv="monthly">Mensual</button>
+          <button class="ttab" data-cv="weekly">Semanal</button>
+          <button class="ttab" data-cv="daily">Diario</button>
+        </div>
       </div>
-      <span style="font-size:11px;color:#aaa;margin-left:8px">— 2025 &nbsp;·· 2026</span>
+      <div style="width:1px;height:28px;background:#eee;flex-shrink:0"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.6px">Métrica:</span>
+        <div class="tgrp" id="cmpMetricTG">
+          <button class="ttab" data-cm="pv_ga4">PV GA4</button>
+          <button class="ttab on" data-cm="pv_mf">PV Marfeel</button>
+          <button class="ttab" data-cm="uu_ga4">UU GA4</button>
+          <button class="ttab" data-cm="uu_mf">UU Marfeel</button>
+        </div>
+      </div>
+      <span style="font-size:11px;color:#aaa;margin-left:auto">▓ 2025 &nbsp;— 2026</span>
     </div>
+    <!-- Month selector for weekly/daily -->
+    <div id="cmpMonthRow" style="display:none;gap:7px;flex-wrap:wrap;margin-bottom:16px"></div>
 
     <!-- Gráfico líneas: todos los sitios -->
     <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:14px">
       <div class="card">
-        <div class="ctit">Evolución mensual · <span id="cmpSiteLbl">—</span></div>
+        <div class="ctit"><span id="cmpChartTit1">Evolución</span> · <span id="cmpSiteLbl">—</span></div>
         <div class="cwrap h240"><canvas id="cmpChart1"></canvas></div>
       </div>
       <div class="card">
@@ -381,7 +395,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
     <!-- Tabla detallada mes a mes -->
     <div class="card g11">
       <div class="ctit" style="justify-content:space-between">
-        <span>Detalle mensual · <span id="cmpSiteLbl2">—</span></span>
+        <span><span id="cmpTblTit">Detalle</span> · <span id="cmpSiteLbl2">—</span></span>
         <div class="tgrp" id="cmpTblMetricTG" style="font-size:10px">
           <button class="ttab on" data-ctm="pv">Págs. Vistas</button>
           <button class="ttab" data-ctm="uu">Usuarios</button>
@@ -528,9 +542,9 @@ const PROXY = PROXIES[0]; // kept for legacy usage
 let SHEET26_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzFzAs9itVwbJwv8zDiWV1TVUjmQzrd5f0hsPsfyLmfwWuJqUexf6WuYxaEYw4JQ/pub?gid=293101520&single=true&output=csv'; // URL 2026 embebida
 const MONTHS   = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 const SITES    = {
-  meganoticias:{label:'Meganoticias', color:'#1ea88b'},
-  mega:        {label:'Mega',         color:'#323cb4'},
-  megatiempo:  {label:'Megatiempo',   color:'#ffb831'}
+  meganoticias:{label:'Meganoticias', color:'#1ea88b', logo:'/assets/images/meganoticias.jpg'},
+  mega:        {label:'Mega',         color:'#323cb4', logo:'/assets/images/mega.jpg'},
+  megatiempo:  {label:'Megatiempo',   color:'#ffb831', logo:'/assets/images/megatiempo.jpg'},
 };
 const GA4_COLOR = '#cccccc';
 const MF_COLOR  = GA4_COLOR; // alias — Marfeel uses site color (var(--bc)) directly
@@ -670,6 +684,7 @@ function buildSiteTabs(){
     buildSiteTabs(); refreshAll();
   }));
   document.getElementById('brandDot').style.background=SITES[ST.site].color;
+  const bi=document.getElementById('brandImg'); if(bi) bi.src=SITES[ST.site].logo||'';
   document.documentElement.style.setProperty('--bc',SITES[ST.site].color);
   document.getElementById('hdrMain').textContent='Dashboard '+SITES[ST.site].label;
   document.title='Dashboard '+SITES[ST.site].label+' · Métricas';
@@ -1005,7 +1020,7 @@ function runAlerts(){
 // ═══════════════════════════════════════════════════════════════
 // COMPARE VIEW
 // ═══════════════════════════════════════════════════════════════
-let cmpMetric='pv_mf', cmpTblMetric='pv';
+let cmpMetric='pv_mf', cmpTblMetric='pv', cmpView='annual', cmpMonth='';
 
 function renderCompare(){
   const siteColor=SITES[ST.site].color;
@@ -1023,9 +1038,30 @@ function renderCompare(){
     data26[id]=allM.map(m=>({pv_ga4:sum(rows('2026',m,id),'pv_ga4'),pv_mf:sum(rows('2026',m,id),'pv_mf'),uu_ga4:sum(rows('2026',m,id),'uu_ga4'),uu_mf:sum(rows('2026',m,id),'uu_mf')}));
   });
 
-  // ── METRIC TOGGLES ──
+  // ── VIEW + METRIC TOGGLES ──
   const metricLabels={pv_ga4:'PV GA4',pv_mf:'PV Marfeel',uu_ga4:'UU GA4',uu_mf:'UU Marfeel'};
   document.getElementById('cmpMetricLbl').textContent=metricLabels[cmpMetric];
+  const bc=SITES[ST.site].color;
+
+  document.getElementById('cmpViewTG').querySelectorAll('.ttab').forEach(b=>{
+    const on=b.dataset.cv===cmpView;
+    b.className='ttab'+(on?' on':'');
+    b.style.background=on?'#444':'transparent'; b.style.color=on?'#fff':'#666';
+    b.onclick=()=>{cmpView=b.dataset.cv; renderCompare();};
+  });
+
+  const needMonth=cmpView==='weekly'||cmpView==='daily';
+  const cmpMonthRow=document.getElementById('cmpMonthRow');
+  cmpMonthRow.style.display=needMonth?'flex':'none';
+  if(needMonth){
+    const avM=availMonths('2025');
+    if(!cmpMonth||!avM.includes(cmpMonth)) cmpMonth=avM[avM.length-1]||MONTHS[0];
+    cmpMonthRow.innerHTML=avM.map(m=>'<button class="mbtn'+(cmpMonth===m?' on':'')+'" data-m="'+m+'" style="'+(cmpMonth===m?'background:'+bc+';color:#fff;font-weight:700':'')+'">'+(m.slice(0,3))+'</button>').join('');
+    cmpMonthRow.querySelectorAll('.mbtn').forEach(b=>b.addEventListener('click',e=>{
+      cmpMonth=e.currentTarget.dataset.m; renderCompare();
+    }));
+  }
+
   document.getElementById('cmpMetricTG').querySelectorAll('.ttab').forEach(b=>{
     const on=b.dataset.cm===cmpMetric;
     b.className='ttab'+(on?' on':'');
@@ -1166,70 +1202,143 @@ function renderCompare(){
     ].join('');
   })();
 
-  // ── CHART 1: líneas del sitio seleccionado (ambos años, GA4 + Marfeel) ──
-  // Chart 1: evolution of selected site — Marfeel primary (site color), GA4 secondary (gray)
+  // ── BUILD CHART DATA based on cmpView ──
   const mfKey = cmpMetric==='pv_ga4'?'pv_mf':cmpMetric==='uu_ga4'?'uu_mf':cmpMetric==='pv_mf'?'pv_mf':'uu_mf';
   const ga4Key= cmpMetric==='pv_mf'?'pv_ga4':cmpMetric==='uu_mf'?'uu_ga4':cmpMetric==='pv_ga4'?'pv_ga4':'uu_ga4';
+  const cmpMfKey=mfKey;
   const scA=siteColor+'28';
-  const datasets1=[
-    {label:'Marfeel 2025',data:data25[ST.site].map(d=>d[mfKey]),borderColor:siteColor,backgroundColor:scA,borderWidth:2,pointRadius:2,tension:.4,fill:'origin',order:2},
-    {label:'Marfeel 2026',data:data26[ST.site].map(d=>d[mfKey]),borderColor:siteColor,backgroundColor:'transparent',borderWidth:3,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false,order:1},
-    {label:'GA4 2025',data:data25[ST.site].map(d=>d[ga4Key]),borderColor:'#dddddd',backgroundColor:'#dddddd18',borderWidth:1.5,pointRadius:1,tension:.4,fill:'origin',order:4},
-    {label:'GA4 2026',data:data26[ST.site].map(d=>d[ga4Key]),borderColor:'#cccccc',backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,3],pointRadius:1,tension:.4,fill:false,order:3},
-  ];
-  dc('c1');
-  CH.c1=new Chart(document.getElementById('cmpChart1'),{type:'line',plugins:[avgLinePlugin],data:{labels,datasets:datasets1},options:cmpChartOpts()});
 
-  // Chart 2: all 3 sites — Marfeel only, 2025 solid vs 2026 dashed
-  const cmpMfKey=cmpMetric==='pv_ga4'?'pv_mf':cmpMetric==='uu_ga4'?'uu_mf':cmpMetric;
-  const datasets2=Object.entries(SITES).flatMap(([id,s])=>[
-    {label:`${s.label} 2025`,data:data25[id].map(d=>d[cmpMfKey]),borderColor:s.color,backgroundColor:s.color+'20',borderWidth:2,pointRadius:2,tension:.4,fill:'origin',order:2},
-    {label:`${s.label} 2026`,data:data26[id].map(d=>d[cmpMfKey]),borderColor:s.color,backgroundColor:'transparent',borderWidth:3,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false,order:1}
-  ]);
+  // Labels and data per view
+  let cmpLabels, cmpD25s, cmpD26s;
+  const mo2=cmpMonth||(availMonths('2025').slice(-1)[0]||MONTHS[0]);
+
+  if(cmpView==='annual'){
+    cmpLabels=['2025','2026'];
+    const v25=allM.reduce((s,m)=>s+sum(rows('2025',m,ST.site),mfKey),0);
+    const v26=allM.reduce((s,m)=>s+sum(rows('2026',m,ST.site),mfKey),0);
+    cmpD25s=[v25,null]; cmpD26s=[null,v26];
+    if(document.getElementById('cmpChartTit1')) document.getElementById('cmpChartTit1').textContent='Total año';
+    if(document.getElementById('cmpTblTit')) document.getElementById('cmpTblTit').textContent='Comparativa anual';
+  } else if(cmpView==='monthly'){
+    cmpLabels=allM.map(m=>m.slice(0,3));
+    cmpD25s=data25[ST.site].map(d=>d[mfKey]);
+    cmpD26s=data26[ST.site].map(d=>d[mfKey]);
+    if(document.getElementById('cmpChartTit1')) document.getElementById('cmpChartTit1').textContent='Mensual';
+    if(document.getElementById('cmpTblTit')) document.getElementById('cmpTblTit').textContent='Detalle mensual';
+  } else if(cmpView==='weekly'){
+    const ws25=weeks(rows('2025',mo2,ST.site)), ws26=weeks(rows('2026',mo2,ST.site));
+    const mx=Math.max(ws25.length,ws26.length);
+    cmpLabels=Array.from({length:mx},(_,i)=>'Sem '+(i+1));
+    cmpD25s=Array.from({length:mx},(_,i)=>ws25[i]?ws25[i][mfKey]:null);
+    cmpD26s=Array.from({length:mx},(_,i)=>ws26[i]?ws26[i][mfKey]:null);
+    if(document.getElementById('cmpChartTit1')) document.getElementById('cmpChartTit1').textContent='Semanal · '+mo2;
+    if(document.getElementById('cmpTblTit')) document.getElementById('cmpTblTit').textContent='Detalle semanal';
+  } else {
+    const r25=rows('2025',mo2,ST.site), r26=rows('2026',mo2,ST.site);
+    const mx=Math.max(r25.length,r26.length);
+    cmpLabels=Array.from({length:mx},(_,i)=>''+(i+1));
+    cmpD25s=Array.from({length:mx},(_,i)=>r25[i]?r25[i][mfKey]:null);
+    cmpD26s=Array.from({length:mx},(_,i)=>r26[i]?r26[i][mfKey]:null);
+    if(document.getElementById('cmpChartTit1')) document.getElementById('cmpChartTit1').textContent='Diario · '+mo2;
+    if(document.getElementById('cmpTblTit')) document.getElementById('cmpTblTit').textContent='Detalle diario';
+  }
+
+  // GA4 reference lines (monthly/annual only)
+  const ga25s=(cmpView==='annual')?[allM.reduce((s,m)=>s+sum(rows('2025',m,ST.site),ga4Key),0),null]:data25[ST.site].map(d=>d[ga4Key]);
+  const ga26s=(cmpView==='annual')?[null,allM.reduce((s,m)=>s+sum(rows('2026',m,ST.site),ga4Key),0)]:data26[ST.site].map(d=>d[ga4Key]);
+
+  // Chart 1
+  const datasets1=[
+    {label:'Marfeel 2025',data:cmpD25s,borderColor:siteColor,backgroundColor:scA,borderWidth:2,pointRadius:3,tension:.4,fill:'origin',order:2},
+    {label:'Marfeel 2026',data:cmpD26s,borderColor:siteColor,backgroundColor:'transparent',borderWidth:3,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false,order:1},
+  ];
+  if(cmpView==='annual'||cmpView==='monthly'){
+    datasets1.push({label:'GA4 2025',data:ga25s,borderColor:'#dddddd',backgroundColor:'#dddddd18',borderWidth:1.5,pointRadius:1,tension:.4,fill:'origin',order:4});
+    datasets1.push({label:'GA4 2026',data:ga26s,borderColor:'#cccccc',backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,3],pointRadius:1,tension:.4,fill:false,order:3});
+  }
+  dc('c1');
+  CH.c1=new Chart(document.getElementById('cmpChart1'),{type:'line',plugins:[avgLinePlugin],data:{labels:cmpLabels,datasets:datasets1},options:cmpChartOpts()});
+
+  // Chart 2 — all 3 sites
+  const buildSiteData=(id)=>{
+    if(cmpView==='annual'){
+      const v25=allM.reduce((s,m)=>s+sum(rows('2025',m,id),cmpMfKey),0);
+      const v26=allM.reduce((s,m)=>s+sum(rows('2026',m,id),cmpMfKey),0);
+      return {d25:[v25,null],d26:[null,v26]};
+    } else if(cmpView==='monthly'){
+      return {d25:data25[id].map(d=>d[cmpMfKey]),d26:data26[id].map(d=>d[cmpMfKey])};
+    } else if(cmpView==='weekly'){
+      const w25=weeks(rows('2025',mo2,id)), w26=weeks(rows('2026',mo2,id));
+      const mx=cmpLabels.length;
+      return {d25:Array.from({length:mx},(_,i)=>w25[i]?w25[i][cmpMfKey]:null),d26:Array.from({length:mx},(_,i)=>w26[i]?w26[i][cmpMfKey]:null)};
+    } else {
+      const r25=rows('2025',mo2,id), r26=rows('2026',mo2,id);
+      const mx=cmpLabels.length;
+      return {d25:Array.from({length:mx},(_,i)=>r25[i]?r25[i][cmpMfKey]:null),d26:Array.from({length:mx},(_,i)=>r26[i]?r26[i][cmpMfKey]:null)};
+    }
+  };
+  const datasets2=Object.entries(SITES).flatMap(([id,s])=>{
+    const {d25,d26}=buildSiteData(id);
+    return [
+      {label:s.label+' 2025',data:d25,borderColor:s.color,backgroundColor:s.color+'20',borderWidth:2,pointRadius:2,tension:.4,fill:'origin',order:2},
+      {label:s.label+' 2026',data:d26,borderColor:s.color,backgroundColor:'transparent',borderWidth:3,pointRadius:3,pointHoverRadius:5,tension:.4,fill:false,order:1}
+    ];
+  });
   dc('c2');
-  CH.c2=new Chart(document.getElementById('cmpChart2'),{type:'line',plugins:[avgLinePlugin],data:{labels,datasets:datasets2},options:cmpChartOpts()});
+  CH.c2=new Chart(document.getElementById('cmpChart2'),{type:'line',plugins:[avgLinePlugin],data:{labels:cmpLabels,datasets:datasets2},options:cmpChartOpts()});
 
   // ── TABLA DETALLADA ──
   const ga4k=cmpTblMetric==='pv'?'pv_ga4':'uu_ga4';
   const mfk=cmpTblMetric==='pv'?'pv_mf':'uu_mf';
   const lbl=cmpTblMetric==='pv'?'PV':'UU';
-  document.getElementById('yoyHead').innerHTML=`<tr>
-    <th>Mes</th>
-    <th class="y25-val">${lbl} GA4 2025</th><th class="y26-val">${lbl} GA4 2026</th><th>Δ%</th>
-    <th class="y25-val">${lbl} Marfeel 2025</th><th class="y26-val">${lbl} Marfeel 2026</th><th>Δ%</th>
-  </tr>`;
-  document.getElementById('yoyBody').innerHTML=allM.map((m,i)=>{
-    const a25=data25[ST.site][i], a26=data26[ST.site][i];
-    const has26=a26[ga4k]>0||a26[mfk]>0;
-    const dga4=pct(a25[ga4k],a26[ga4k]), dmf=pct(a25[mfk],a26[mfk]);
-    return `<tr class="${has26?'':'no26'}">
-      <td style="font-weight:700">${m.slice(0,3)}</td>
-      <td class="y25-val">${fmtN(a25[ga4k])}</td>
-      <td class="y26-val">${has26?fmtN(a26[ga4k]):'—'}</td>
-      <td>${has26?`<span class="${tc(dga4)}">${sgn(dga4)}</span>`:'—'}</td>
-      <td class="y25-val">${fmtN(a25[mfk])}</td>
-      <td class="y26-val">${has26?fmtN(a26[mfk]):'—'}</td>
-      <td>${has26?`<span class="${tc(dmf)}">${sgn(dmf)}</span>`:'—'}</td>
-    </tr>`;
-  }).join('');
 
-  // ── FILA TOTAL ──
-  const tot=yr=>({
-    ga4:MONTHS.reduce((s,m)=>s+sum(rows(yr,m,ST.site),ga4k),0),
-    mf: MONTHS.reduce((s,m)=>s+sum(rows(yr,m,ST.site),mfk),0)
-  });
-  const t25=tot('2025'), t26=tot('2026');
-  const has26total=t26.ga4>0||t26.mf>0;
-  const dtga4=pct(t25.ga4,t26.ga4), dtmf=pct(t25.mf,t26.mf);
-  document.getElementById('yoyBody').innerHTML+=`<tr style="font-weight:700;background:#f8f8f8;border-top:2px solid #eee">
-    <td>Total</td>
-    <td class="y25-val">${fmtN(t25.ga4)}</td>
-    <td class="y26-val">${has26total?fmtN(t26.ga4):'—'}</td>
-    <td>${has26total?`<span class="${tc(dtga4)}">${sgn(dtga4)}</span>`:'—'}</td>
-    <td class="y25-val">${fmtN(t25.mf)}</td>
-    <td class="y26-val">${has26total?fmtN(t26.mf):'—'}</td>
-    <td>${has26total?`<span class="${tc(dtmf)}">${sgn(dtmf)}</span>`:'—'}</td>
-  </tr>`;
+  if(cmpView==='annual'){
+    const yr25ga=MONTHS.reduce((s,m)=>s+sum(rows('2025',m,ST.site),ga4k),0);
+    const yr25mf=MONTHS.reduce((s,m)=>s+sum(rows('2025',m,ST.site),mfk),0);
+    const yr26ga=MONTHS.reduce((s,m)=>s+sum(rows('2026',m,ST.site),ga4k),0);
+    const yr26mf=MONTHS.reduce((s,m)=>s+sum(rows('2026',m,ST.site),mfk),0);
+    const has26=yr26ga>0||yr26mf>0;
+    document.getElementById('yoyHead').innerHTML='<tr><th>Año</th><th>'+lbl+' GA4</th><th>'+lbl+' Marfeel</th></tr>';
+    document.getElementById('yoyBody').innerHTML=
+      '<tr><td style="font-weight:700">2025</td><td>'+fmtN(yr25ga)+'</td><td>'+fmtN(yr25mf)+'</td></tr>'+
+      (has26?'<tr><td style="font-weight:700;color:'+Y26_COLOR+'">2026</td><td>'+fmtN(yr26ga)+'</td><td>'+fmtN(yr26mf)+'</td></tr>'+
+      '<tr style="background:#f8f8f8;font-weight:700;border-top:2px solid #eee"><td>Δ%</td><td><span class="'+tc(pct(yr25ga,yr26ga))+'">'+sgn(pct(yr25ga,yr26ga))+'</span></td><td><span class="'+tc(pct(yr25mf,yr26mf))+'">'+sgn(pct(yr25mf,yr26mf))+'</span></td></tr>':'');
+  } else if(cmpView==='monthly'){
+    document.getElementById('yoyHead').innerHTML='<tr><th>Mes</th><th class="y25-val">'+lbl+' GA4 2025</th><th class="y26-val">'+lbl+' GA4 2026</th><th>Δ%</th><th class="y25-val">'+lbl+' MF 2025</th><th class="y26-val">'+lbl+' MF 2026</th><th>Δ%</th></tr>';
+    let rows_html=allM.map((m,i)=>{
+      const a25=data25[ST.site][i], a26=data26[ST.site][i];
+      const has26=a26[ga4k]>0||a26[mfk]>0;
+      const dga=pct(a25[ga4k],a26[ga4k]),dmf2=pct(a25[mfk],a26[mfk]);
+      return '<tr><td style="font-weight:700">'+m.slice(0,3)+'</td><td class="y25-val">'+fmtN(a25[ga4k])+'</td><td class="y26-val">'+(has26?fmtN(a26[ga4k]):'—')+'</td><td>'+(has26?'<span class="'+tc(dga)+'">'+sgn(dga)+'</span>':'—')+'</td><td class="y25-val">'+fmtN(a25[mfk])+'</td><td class="y26-val">'+(has26?fmtN(a26[mfk]):'—')+'</td><td>'+(has26?'<span class="'+tc(dmf2)+'">'+sgn(dmf2)+'</span>':'—')+'</td></tr>';
+    }).join('');
+    const t25g=MONTHS.reduce((s,m)=>s+sum(rows('2025',m,ST.site),ga4k),0);
+    const t25m=MONTHS.reduce((s,m)=>s+sum(rows('2025',m,ST.site),mfk),0);
+    const t26g=MONTHS.reduce((s,m)=>s+sum(rows('2026',m,ST.site),ga4k),0);
+    const t26m=MONTHS.reduce((s,m)=>s+sum(rows('2026',m,ST.site),mfk),0);
+    const ht=t26g>0||t26m>0;
+    rows_html+='<tr style="font-weight:700;background:#f8f8f8;border-top:2px solid #eee"><td>Total</td><td class="y25-val">'+fmtN(t25g)+'</td><td class="y26-val">'+(ht?fmtN(t26g):'—')+'</td><td>'+(ht?'<span class="'+tc(pct(t25g,t26g))+'">'+sgn(pct(t25g,t26g))+'</span>':'—')+'</td><td class="y25-val">'+fmtN(t25m)+'</td><td class="y26-val">'+(ht?fmtN(t26m):'—')+'</td><td>'+(ht?'<span class="'+tc(pct(t25m,t26m))+'">'+sgn(pct(t25m,t26m))+'</span>':'—')+'</td></tr>';
+    document.getElementById('yoyBody').innerHTML=rows_html;
+  } else if(cmpView==='weekly'){
+    const ws25=weeks(rows('2025',mo2,ST.site)), ws26=weeks(rows('2026',mo2,ST.site));
+    const mx=Math.max(ws25.length,ws26.length);
+    document.getElementById('yoyHead').innerHTML='<tr><th>Semana</th><th class="y25-val">'+lbl+' GA4 25</th><th class="y26-val">'+lbl+' GA4 26</th><th>Δ%</th><th class="y25-val">'+lbl+' MF 25</th><th class="y26-val">'+lbl+' MF 26</th><th>Δ%</th></tr>';
+    document.getElementById('yoyBody').innerHTML=Array.from({length:mx},(_,i)=>{
+      const w25=ws25[i],w26=ws26[i];
+      const v25g=w25?w25[ga4k]:0,v26g=w26?w26[ga4k]:0,v25m=w25?w25[mfk]:0,v26m=w26?w26[mfk]:0;
+      const has26=v26g>0||v26m>0;
+      return '<tr><td style="font-weight:700">Sem '+(i+1)+(w25?' ('+w25.span+')':'')+'</td><td class="y25-val">'+fmtN(v25g)+'</td><td class="y26-val">'+(has26?fmtN(v26g):'—')+'</td><td>'+(has26?'<span class="'+tc(pct(v25g,v26g))+'">'+sgn(pct(v25g,v26g))+'</span>':'—')+'</td><td class="y25-val">'+fmtN(v25m)+'</td><td class="y26-val">'+(has26?fmtN(v26m):'—')+'</td><td>'+(has26?'<span class="'+tc(pct(v25m,v26m))+'">'+sgn(pct(v25m,v26m))+'</span>':'—')+'</td></tr>';
+    }).join('');
+  } else {
+    const r25d=rows('2025',mo2,ST.site), r26d=rows('2026',mo2,ST.site);
+    const mx=Math.max(r25d.length,r26d.length);
+    document.getElementById('yoyHead').innerHTML='<tr><th>Día</th><th class="y25-val">'+lbl+' GA4 25</th><th class="y26-val">'+lbl+' GA4 26</th><th>Δ%</th><th class="y25-val">'+lbl+' MF 25</th><th class="y26-val">'+lbl+' MF 26</th><th>Δ%</th></tr>';
+    document.getElementById('yoyBody').innerHTML=Array.from({length:mx},(_,i)=>{
+      const d25r=r25d[i],d26r=r26d[i];
+      const v25g=d25r?d25r[ga4k]:0,v26g=d26r?d26r[ga4k]:0,v25m=d25r?d25r[mfk]:0,v26m=d26r?d26r[mfk]:0;
+      const has26=v26g>0||v26m>0;
+      return '<tr><td style="font-weight:700">Día '+(i+1)+'</td><td class="y25-val">'+fmtN(v25g)+'</td><td class="y26-val">'+(has26?fmtN(v26g):'—')+'</td><td>'+(has26?'<span class="'+tc(pct(v25g,v26g))+'">'+sgn(pct(v25g,v26g))+'</span>':'—')+'</td><td class="y25-val">'+fmtN(v25m)+'</td><td class="y26-val">'+(has26?fmtN(v26m):'—')+'</td><td>'+(has26?'<span class="'+tc(pct(v25m,v26m))+'">'+sgn(pct(v25m,v26m))+'</span>':'—')+'</td></tr>';
+    }).join('');
+  }
 }
 
 function cmpChartOpts(){
