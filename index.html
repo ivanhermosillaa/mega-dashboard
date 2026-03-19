@@ -228,8 +228,8 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--txt);min-h
   <!-- TOP BAR: years + status -->
   <div class="topbar">
     <div class="year-tabs">
-      <button class="ytab y25 on" id="ytab25" onclick="setYear('2025')">2025</button>
-      <button class="ytab y26"    id="ytab26" onclick="setYear('2026')">2026</button>
+      <button class="ytab y26 on" id="ytab26" onclick="setYear('2026')">2026</button>
+      <button class="ytab y25"    id="ytab25" onclick="setYear('2025')">2025</button>
       <button class="ytab cmp"   id="ytabCmp" onclick="setYear('compare')">Comparar años</button>
     </div>
     <div class="status-pill">
@@ -542,9 +542,9 @@ const PROXY = PROXIES[0]; // kept for legacy usage
 let SHEET26_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzFzAs9itVwbJwv8zDiWV1TVUjmQzrd5f0hsPsfyLmfwWuJqUexf6WuYxaEYw4JQ/pub?gid=293101520&single=true&output=csv'; // URL 2026 embebida
 const MONTHS   = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 const SITES    = {
-  meganoticias:{label:'Meganoticias', color:'#1ea88b', logo:'https://ivanhermosillaa.github.io/mega-dashboard/assets/images/m.png'},
-  mega:        {label:'Mega',         color:'#323cb4', logo:'https://ivanhermosillaa.github.io/mega-dashboard/assets/images/m.png'},
-  megatiempo:  {label:'Megatiempo',   color:'#ffb831', logo:'https://ivanhermosillaa.github.io/mega-dashboard/assets/images/m.png'},
+  meganoticias:{label:'Meganoticias', color:'#1ea88b'},
+  mega:        {label:'Mega',         color:'#323cb4', logo:'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABgAGADASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAgHBgX/xAAzEAABAwMCBAQEBQUBAAAAAAABAAIDBAURBgcSITFRCEFhcRMUIiMWgYKRoRUyM2JyQ//EABoBAQACAwEAAAAAAAAAAAAAAAABAwIEBQb/xAArEQABAwIDBgcBAQAAAAAAAAABAAIDBBEGITEFEiJBgbFRYXGR0eHwE8H/2gAMAwEAAhEDEQA/ALLRERERERERERERERERERERERERERERFxW7u4dt29sDaypj+ar6kllFSNdgyOHVxPk0ZGT6geatghknkEcYuSoJAFyu1RRlc95tz71WyTUl2lpWNPF8C30jS2MeuWucfzK6/a/xB3eC5w2/W5irKGVwYa6OMMlgPTL2t5Ob3wAR159F3ZcM1kce+LEjkDn2VQnaTZU8imTdPxB3SS5z23Q5hpqKJxZ/UJIw+ScjlljXcmt7Egk9eS4u3by7oWerZPVXiapY85+DX0jeCQemGtP7FIcM1kkYebAnkTn2QztBsrPRcNs9uPbtw7HJPFF8ncqXDaykLs8BPR7T5sODjtgg+vcrhTwSQSGOQWIVoIIuEREVSlERERFEW/OrzrDcSvrIJeKgos0lFz5FjCcv/U7J9sKlvERq/wDCW3NV8tLwXG5Zo6TB5t4h9bx/y3PPuQpDi07dJNIzaoZTE2uCsbRPk7SObxft0BPdwC9nhakawGqk58I/3491rTuvwhXDt1py0aY0jb7bZ4ImRCBjpJWgcU7y0EyOPmSef8dFh3i10LTUYpNaWqjjhEsny9yEbcAuP+OQgeZ5tJ88tXc+F3V/4i2/baaqXjr7KRTuyeboSPtO/YFv6Vour7FSam0xcbDXDMFbA6InHNpP9rh6g4I9lx46ibZu0i6Q3IOfmD9ZhWEB7MlNnhF07abtqe7Xa4wRVM9sii+VjkAcGOeXZkwfMcOAfLJVH6001atWaeqrLdqaOWGZhDHluXRPxye0+TgeakTae+Vm2u7jILqTBE2d1uubT0DS7HH7Bwa7PbPdWoOYyFt4k/rHWtmDsiAWnwt4d+qxgsW2UU7Y3ms2x3ebDdCYo4ah1uuQ8jGXY4/YHhePT3VrAggEEEHoQpk8X2kBS3ai1lSxfZrQKStwOQlaPocfdoLf0jutN8NmrzqnbqCnqZeO42kikqMnm5oH23/m3l7tKs200VtLHXs10d+9e4URcLiwrTkRF5VbCIiIijrxGamqNYboutNuDp6e2v8A6fSRt5/EmLgHkepfhv6QqLtG3NtptnxoGcNLJaMsnlA6zu+oyD2fzHsFLekamDTG+lNPqHDI6G9Stqnv6MPE5oefQEh2fTKtxksb4WzMkY6JzeIPDstI65z2XrdvPdSxU8EOTQLg+J/Z9VrwjeJJUXbP36r243bZT3XMEXx3W25tPRoLsB/s1wDs9s91aaiTxAXiz37dS61tlbG6mAZA+aM5bUSMbwuePTo3I68OfNUh4dtbRat0DS01TUtfd7YwU1Uwu+tzW8mSY7Objn3BWWIaV00Edbu2JA3h2+PZRC4AlqyrxeaQ+SvlHrCli+xcAKaswOQmaPocf+mgj9HqtW8OWr/xXtzTR1MvHcbXijqcnm4NH23n3bjn3BXn+Kq72uj2tqbXVyRura+aJtJFkceWva5zwOwAPP1A81hPh21nHo/cCIV04htdzaKWqc44aw5zHIe2HcifIOKzigk2jsbMcTCd3zA+sugQkMl9VWW4Wm6fV2jblp+pwPmoSInkf45BzY78nAFSnsFqOq0Pusy3XIOghrZTba6N3/nJxYY4+z+WezirIMsYhMxkYIw3i48/TjrnPZRHuNV02qN7a6bTuJY626RRUzo+krwWMLx6FwJz+aow7eeKamkHARf0P7PopmyIcNVbyIi8othERERYjv1sxNquvfqXTDoY7s5oFVTSO4WVOBgODujX4wOfIgDpjni40LvBDROszLNqRtFnhNMyoPwD+Qfw4/hWsi71JiGpp4hEQHAaX5Kl0LXG6nDbLw8OfQ1NVrp/wZZoHR01JTSZdA4jlI5w5Fw8mjI756LiNQbObk6TvXxbJTVVwY1xEFdbJeB5H+zQQ5p79R6lWMiyjxJWNkc91iDyOnRDA21lHFi2f3M1behJeqaroWkgTV10m43Bv+oJLnH05D1C7rcrw78FtpKjQ8vxKmCBsdTS1MmDUuHWRrjya4+bTgdsedGokmJKx0jXts0DkNOqCBtrKKPwLu+6iFnNm1IaLPB8sZz8D9uPhx/C2TYbZWfTFyi1NqowvucQPylHG7jbTkjBe53QvxkDHIZ6k9NzRRV4hqaiIxABoOtuaNha03RERcBXIiIiIiIiIiIiIiIiIiIiIiIiL//Z'},
+  megatiempo:  {label:'Megatiempo',   color:'#ffb831'}
 };
 const GA4_COLOR = '#cccccc';
 const MF_COLOR  = GA4_COLOR; // alias — Marfeel uses site color (var(--bc)) directly
@@ -630,7 +630,7 @@ function saveUrl26config(url){ try{ localStorage.setItem('mega26_url',url); SHEE
 // ═══════════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════════
-const ST = { site:'meganoticias', month:'ENERO', view:'monthly', metric:'pv', year:'2025' };
+const ST = { site:'meganoticias', month:'ENERO', view:'monthly', metric:'pv', year:'2026' };
 const CH = {};
 
 // ═══════════════════════════════════════════════════════════════
